@@ -7,7 +7,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/stikypiston/spyglass/lens"
+	"github.com/indium114/spyglass/lens"
 
 	"gopkg.in/yaml.v3"
 )

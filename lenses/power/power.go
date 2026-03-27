@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/stikypiston/spyglass/lens"
+	"github.com/indium114/spyglass/lens"
 )
 
 type powerLens struct{}

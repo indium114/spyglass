@@ -11,7 +11,7 @@
 Adding new lenses is done in the source code, so you'll need to grab a copy of that:
 
 ```shell
-git clone https://github.com/stikypiston/spyglass
+git clone https://github.com/indium114/spyglass
 ```
 
 Then `cd` into the repo
@@ -39,7 +39,7 @@ code lenses.go
 ## 3. Import the lens's package
 
 Look up the lens you want to import, and obtain its GitHub (or other git forge) URL.
-It may look something like `github.com/stikypiston/spyglass/lenses/applications`
+It may look something like `github.com/indium114/spyglass/lenses/applications`
 
 Note that the first two things after `github.com` is the username and the repository. Some lenses may have extra things like a package within that repo.
 
@@ -47,7 +47,7 @@ First, `go get` the package:
 
 ```shell
 go get <URL>
-# go get github.com/stikypiston/spyglass/lenses/applications
+# go get github.com/indium114/spyglass/lenses/applications
 ```
 
 Then, add it to the `import` list at the top of `lenses.go`:
@@ -55,7 +55,7 @@ Then, add it to the `import` list at the top of `lenses.go`:
 ```go
 import (
   // ...
-  "github.com/stikypiston/spyglass/lenses/applications" // Insert your URL here
+  "github.com/indium114/spyglass/lenses/applications" // Insert your URL here
 )
 ```
 

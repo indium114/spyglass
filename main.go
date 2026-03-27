@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/stikypiston/spyglass/lens"
+	"github.com/indium114/spyglass/lens"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/stikypiston/spyglass/lens"
-	"github.com/stikypiston/spyglass/lenses/applications"
+	"github.com/indium114/spyglass/lens"
+	"github.com/indium114/spyglass/lenses/applications"
 
-	"github.com/stikypiston/spyglass/lenses/nerdfont"
-	"github.com/stikypiston/spyglass/lenses/power"
-	"github.com/stikypiston/spyglass/lenses/searxng"
+	"github.com/indium114/spyglass/lenses/nerdfont"
+	"github.com/indium114/spyglass/lenses/power"
+	"github.com/indium114/spyglass/lenses/searxng"
 
-	"github.com/stikypiston/spyglass/lenses/files"
+	"github.com/indium114/spyglass/lenses/files"
 )
 
 var Lenses = []lens.Lens{

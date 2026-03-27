@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/stikypiston/spyglass/lens"
+	"github.com/indium114/spyglass/lens"
 )
 
 const glyphURL = "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/refs/heads/master/glyphnames.json"

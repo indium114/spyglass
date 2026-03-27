@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/stikypiston/spyglass/lens"
+	"github.com/indium114/spyglass/lens"
 )
 
 type filesLens struct {

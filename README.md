@@ -14,7 +14,7 @@ Simply add the repo to your flake inputs...
 
 ```nix
 inputs = {
-  spyglass.url = "github:stikypiston/spyglass";
+  spyglass.url = "github:indium114/spyglass";
 };
 ```
 
@@ -31,7 +31,7 @@ environment.systemPackages = [
 Simply run the following command:
 
 ```shell
-go install github.com/stikypiston/spyglass@latest
+go install github.com/indium114/spyglass@latest
 ```
 
 > [!NOTE]

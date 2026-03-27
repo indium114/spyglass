@@ -1,4 +1,4 @@
-module github.com/stikypiston/spyglass
+module github.com/indium114/spyglass
 
 go 1.25.0
 
