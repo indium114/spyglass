@@ -4,7 +4,7 @@
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/indium114/spyglass)
 
-**spyglass** is an extensible TUI search tool written in *Go*, inspired by [Raycast](https://raycast.com) and [Vicinae](https://vicinae.com)
+**spyglass** is an extensible TUI search tool written in *Go*, inspired by [Raycast](https://raycast.com) and [Vicinae](https://vicinae.com), and whatever launcher it is that @dacctal uses
 
 ## Installation
 
@@ -39,7 +39,7 @@ go install github.com/indium114/spyglass@latest
 
 ## Basic Navigation
 
-- Type to search
+- `Type` to search
 - Use `Tab` to switch Lenses (tabs)
 - Use `Up/Down` to select results
 - Use `Shift+Tab` to open the Context Menu
