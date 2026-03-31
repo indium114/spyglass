@@ -106,7 +106,7 @@ func (l *myLens) Enter(e lens.Entry) error {
 }
 ```
 
-> [!WARN]
+> [!WARNING]
 > Spyglass exits after running the Enter command, so use `Start()` instead of `Run()` if you don't want to block.
 > Also, use something like `& sleep 5` at the end of the command to prevent the terminal from quitting before the application detaches from the terminal
 
