@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"os/exec"
 	"strings"
+	"syscall"
 
 	"github.com/indium114/spyglass/lens"
 )
@@ -59,6 +60,7 @@ func (l *clipboardLens) Enter(e lens.Entry) error {
 	cmd := exec.Command("cliphist", "decode", e.ID)
 
 	copyCmd := exec.Command("wl-copy")
+	copyCmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 
 	pipe, err := cmd.StdoutPipe()
 	if err != nil {
@@ -85,6 +87,7 @@ func (l *clipboardLens) ContextActions(e lens.Entry) []lens.Action {
 			Run: func(entry lens.Entry) error {
 				cmd := exec.Command("cliphist", "decode", entry.ID)
 				copyCmd := exec.Command("wl-copy")
+				copyCmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 
 				pipe, err := cmd.StdoutPipe()
 				if err != nil {
