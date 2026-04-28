@@ -43,6 +43,11 @@ func (l *clipboardLens) Search(query string) ([]lens.Entry, error) {
 		id := parts[0]
 		text := parts[1]
 
+		limit := 30
+		if len(text) > limit {
+			text = text[:limit] + "..."
+		}
+
 		if query == "" || strings.Contains(strings.ToLower(text), strings.ToLower(query)) {
 			entries = append(entries, lens.Entry{
 				ID:          id,
