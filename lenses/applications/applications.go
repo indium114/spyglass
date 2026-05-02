@@ -1,11 +1,13 @@
 package applications
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/indium114/spyglass/lens"
 
@@ -73,12 +75,35 @@ func (a *applicationsLens) Enter(entry lens.Entry) error {
 	for _, app := range a.apps {
 		if app.Name == entry.Title {
 			cmd := exec.Command("sh", "-c", app.Command)
-			cmd.Stdout = os.Stdout
-			cmd.Stdin = os.Stdin
-			cmd.Stderr = os.Stderr
+			cmd.Stdout = nil
+			cmd.Stdin = nil
+			cmd.Stderr = nil
 			cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 
-			return cmd.Start()
+			if err := cmd.Start(); err != nil {
+				return err
+			}
+
+			// ensure that the process has started before returning
+			timeout := 10 * time.Second
+			ticker := time.NewTicker(50 * time.Millisecond)
+			defer ticker.Stop()
+			deadline := time.After(timeout)
+
+			for {
+				select {
+				case <-ticker.C:
+					// check if process exists using signal 0
+					if err := cmd.Process.Signal(syscall.Signal(0)); err == nil {
+						return nil
+					}
+				case <-deadline:
+					if err := cmd.Process.Signal(syscall.Signal(0)); err == nil {
+						return nil
+					}
+					return fmt.Errorf("Application %q failed to start within %v", app.Name, timeout)
+				}
+			}
 		}
 	}
 	return nil
@@ -94,12 +119,35 @@ func (a *applicationsLens) ContextActions(entry lens.Entry) []lens.Action {
 					Name: c.Name,
 					Run: func(e lens.Entry) error {
 						cmd := exec.Command("sh", "-c", command)
-						cmd.Stdout = os.Stdout
-						cmd.Stdin = os.Stdin
-						cmd.Stderr = os.Stderr
+						cmd.Stdout = nil
+						cmd.Stdin = nil
+						cmd.Stderr = nil
 						cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 
-						return cmd.Start()
+						if err := cmd.Start(); err != nil {
+							return err
+						}
+
+						// ensure that the process has started before returning
+						timeout := 10 * time.Second
+						ticker := time.NewTicker(50 * time.Millisecond)
+						defer ticker.Stop()
+						deadline := time.After(timeout)
+
+						for {
+							select {
+							case <-ticker.C:
+								// check if process exists using signal 0
+								if err := cmd.Process.Signal(syscall.Signal(0)); err == nil {
+									return nil
+								}
+							case <-deadline:
+								if err := cmd.Process.Signal(syscall.Signal(0)); err == nil {
+									return nil
+								}
+								return fmt.Errorf("Action %q failed to start within %v", c.Name, timeout)
+							}
+						}
 					},
 				})
 			}
