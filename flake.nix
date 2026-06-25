@@ -25,7 +25,7 @@
 
         packages.spyglass = pkgs.buildGoModule {
           pname = "spyglass";
-          version = "2026.05.02-a";
+          version = "2026.06.25-a";
 
           src = self;
 
