@@ -29,7 +29,7 @@
 
           src = self;
 
-          vendorHash = "sha256-aJllcMJduoi8VBWMJWsxm8swXtNonYZzX8etmNZePzc=";
+          vendorHash = "sha256-XmWORop+D+zY0hU2hb9CC2xwihQ/5aprh02Yj6zlyo8=";
 
           subPackages = [ "." ];
           ldflags = [ "-s" "-w" ];

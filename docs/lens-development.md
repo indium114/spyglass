@@ -65,7 +65,8 @@ func (l *myLens) Name() string {
 
 Called whenever the user types into the search bar
 
-- Should return a filtered list of entries
+- Should return a fuzzy-filtered list of entries
+	- Use `github.com/lithammer/fuzzysearch/fuzzy` for this
 - Called frequently (every time a character in the search bar changes), so it should be *fast*
 - If the query is empty, default/unfiltered results should be returned
 
@@ -74,7 +75,7 @@ func (l *myLens) Search(query string) ([]lens.Entry, error) {
 	var results []lens.Entry
 
 	for _, item := range l.items {
-		if query == "" || strings.Contains(item.Name, query) {
+		if query == "" || fuzzy.Match(query, item.Name) {
 			results = append(results, lens.Entry{
 				ID:    item.ID,
 				Title: item.Name,

@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/indium114/spyglass/lens"
+	"github.com/lithammer/fuzzysearch/fuzzy"
 )
 
 type clipboardLens struct{}
@@ -48,7 +49,7 @@ func (l *clipboardLens) Search(query string) ([]lens.Entry, error) {
 			text = text[:limit] + "..."
 		}
 
-		if query == "" || strings.Contains(strings.ToLower(text), strings.ToLower(query)) {
+		if query == "" || fuzzy.Match(strings.ToLower(query), strings.ToLower(text)) {
 			entries = append(entries, lens.Entry{
 				ID:          id,
 				Title:       text,

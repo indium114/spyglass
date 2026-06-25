@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/indium114/spyglass/lens"
+	"github.com/lithammer/fuzzysearch/fuzzy"
 )
 
 type filesLens struct {
@@ -128,7 +129,7 @@ func (l *filesLens) Search(query string) ([]lens.Entry, error) {
 
 	var results []lens.Entry
 	for _, path := range filesCopy {
-		if query == "" || strings.Contains(strings.ToLower(path), query) {
+		if query == "" || fuzzy.Match(query, strings.ToLower(path)) {
 			results = append(results, lens.Entry{
 				ID:          path,
 				Title:       shortenPath(l.home, path),
