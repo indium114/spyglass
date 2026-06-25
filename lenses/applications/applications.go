@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/indium114/spyglass/lens"
+	"github.com/lithammer/fuzzysearch/fuzzy"
 
 	"gopkg.in/yaml.v3"
 )
@@ -59,7 +60,7 @@ func (a *applicationsLens) Search(query string) ([]lens.Entry, error) {
 	query = strings.ToLower(query)
 
 	for _, app := range a.apps {
-		if strings.Contains(strings.ToLower(app.Name), query) {
+		if fuzzy.Match(query, strings.ToLower(app.Name)) {
 			results = append(results, lens.Entry{
 				ID:          app.Name,
 				Title:       app.Name,
