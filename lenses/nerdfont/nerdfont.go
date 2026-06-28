@@ -11,6 +11,7 @@ import (
 	"sync"
 
 	"github.com/indium114/spyglass/lens"
+	"github.com/lithammer/fuzzysearch/fuzzy"
 )
 
 const glyphURL = "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/refs/heads/master/glyphnames.json"
@@ -101,7 +102,7 @@ func (n *nerdFontLens) Search(query string) ([]lens.Entry, error) {
 	q := strings.ToLower(strings.TrimSpace(query))
 	var entries []lens.Entry
 	for _, g := range n.glyphs {
-		if q == "" || strings.Contains(strings.ToLower(g.Name), q) || strings.Contains(strings.ToLower(g.Char), q) {
+		if q == "" || fuzzy.Match(q, strings.ToLower(g.Name)) || strings.Contains(strings.ToLower(g.Char), q) {
 			entries = append(entries, lens.Entry{
 				ID:          g.Name,
 				Title:       g.Name,
