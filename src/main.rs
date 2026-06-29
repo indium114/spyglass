@@ -105,7 +105,11 @@ impl App {
 
     fn render(&mut self, frame: &mut Frame) {
         let list = List::new(self.items.clone())
-            .highlight_style(Style::new().fg(Color::Magenta).add_modifier(Modifier::BOLD))
+            .highlight_style(
+                Style::new()
+                    .fg(Color::Rgb(203, 166, 247))
+                    .add_modifier(Modifier::BOLD),
+            )
             .highlight_symbol("> ");
 
         // MARK: layout
@@ -161,7 +165,7 @@ impl App {
                 Block::new()
                     .borders(Borders::ALL)
                     .border_type(BorderType::Rounded)
-                    .border_style(Style::new().fg(Color::Magenta)),
+                    .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
             ),
             layout[3],
         );
