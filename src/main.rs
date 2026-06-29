@@ -3,7 +3,7 @@ use ratatui::{
     crossterm::event::{self, Event, KeyEventKind},
     layout::{Constraint, Direction, Layout},
     style::{Color, Modifier, Style},
-    widgets::{Block, BorderType, Borders, List, ListState, Paragraph},
+    widgets::{Block, BorderType, Borders, List, ListState, Paragraph, Wrap},
 };
 
 #[derive(Debug, Default)]
@@ -124,7 +124,8 @@ impl App {
             Paragraph::new("[Lens 1] | Lens 2 | Lens 3 | Lens 4").block(
                 Block::new()
                     .borders(Borders::ALL)
-                    .border_type(BorderType::Rounded),
+                    .border_type(BorderType::Rounded)
+                    .border_style(Style::new().fg(Color::Black)),
             ),
             layout[0],
         );
@@ -134,7 +135,8 @@ impl App {
             list.block(
                 Block::new()
                     .borders(Borders::ALL)
-                    .border_type(BorderType::Rounded),
+                    .border_type(BorderType::Rounded)
+                    .border_style(Style::new().fg(Color::Black)),
             ),
             layout[1],
             &mut self.state,
@@ -143,10 +145,12 @@ impl App {
         // MARK: description
         frame.render_widget(
             Paragraph::new("This is a description. The quick brown fox jumps over the lazy dog")
+                .wrap(Wrap { trim: true })
                 .block(
                     Block::new()
                         .borders(Borders::ALL)
-                        .border_type(BorderType::Rounded),
+                        .border_type(BorderType::Rounded)
+                        .border_style(Style::new().fg(Color::Black)),
                 ),
             layout[2],
         );
@@ -156,7 +160,8 @@ impl App {
             Paragraph::new("> Search").block(
                 Block::new()
                     .borders(Borders::ALL)
-                    .border_type(BorderType::Rounded),
+                    .border_type(BorderType::Rounded)
+                    .border_style(Style::new().fg(Color::Magenta)),
             ),
             layout[3],
         );
