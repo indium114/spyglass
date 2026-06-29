@@ -96,6 +96,9 @@ impl App {
                         event::KeyCode::Esc => break,
                         event::KeyCode::Up => self.select_prev(),
                         event::KeyCode::Down => self.select_next(),
+                        event::KeyCode::Tab => (),
+                        event::KeyCode::BackTab => (),
+                        event::KeyCode::Enter => (),
                         _ => {
                             textarea.input(key_event);
                         }
