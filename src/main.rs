@@ -5,6 +5,7 @@ use ratatui::{
     style::{Color, Modifier, Style},
     widgets::{Block, BorderType, Borders, List, ListState, Paragraph, Wrap},
 };
+use ratatui_textarea::TextArea;
 
 #[derive(Debug, Default)]
 pub struct App {
@@ -85,15 +86,19 @@ impl App {
     }
 
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> std::io::Result<()> {
+        let mut textarea = TextArea::default();
+
         loop {
-            terminal.draw(|frame| self.render(frame))?;
+            terminal.draw(|frame| self.render(frame, &mut textarea))?;
             match event::read()? {
                 Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
                     match key_event.code {
                         event::KeyCode::Esc => break,
                         event::KeyCode::Up => self.select_prev(),
                         event::KeyCode::Down => self.select_next(),
-                        _ => (),
+                        _ => {
+                            textarea.input(key_event);
+                        }
                     }
                 }
                 _ => (),
@@ -103,7 +108,7 @@ impl App {
         Ok(())
     }
 
-    fn render(&mut self, frame: &mut Frame) {
+    fn render(&mut self, frame: &mut Frame, textarea: &mut TextArea) {
         let list = List::new(self.items.clone())
             .highlight_style(
                 Style::new()
@@ -160,14 +165,14 @@ impl App {
         );
 
         // MARK: search bar
-        frame.render_widget(
-            Paragraph::new("> Search").block(
-                Block::new()
-                    .borders(Borders::ALL)
-                    .border_type(BorderType::Rounded)
-                    .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
-            ),
-            layout[3],
+        textarea.set_block(
+            Block::new()
+                .borders(Borders::ALL)
+                .border_type(BorderType::Rounded)
+                .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
         );
+        textarea.set_placeholder_text(" Search...");
+
+        frame.render_widget(&*textarea, layout[3]);
     }
 }
