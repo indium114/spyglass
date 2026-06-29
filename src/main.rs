@@ -11,6 +11,7 @@ use ratatui_textarea::TextArea;
 pub struct App {
     items: Vec<String>,
     state: ListState,
+    query: String,
 }
 
 fn main() -> color_eyre::Result<()> {
@@ -54,6 +55,7 @@ impl App {
         Self {
             items,
             state: ListState::default().with_selected(Some(0)),
+            query: "".to_string(),
         }
     }
 
@@ -175,6 +177,7 @@ impl App {
                 .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
         );
         textarea.set_placeholder_text(" Search...");
+        self.query = textarea.lines().join(" ");
 
         frame.render_widget(&*textarea, layout[3]);
     }
