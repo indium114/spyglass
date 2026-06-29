@@ -7,6 +7,8 @@ use ratatui::{
 };
 use ratatui_textarea::TextArea;
 
+mod lens;
+
 #[derive(Debug, Default)]
 pub struct App {
     items: Vec<String>,
