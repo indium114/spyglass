@@ -3,7 +3,7 @@ use color_eyre::eyre::Error;
 pub struct Entry {
     pub id: String,
     pub title: String,
-    pub icon: char,
+    pub icon: String,
     pub description: String,
 }
 

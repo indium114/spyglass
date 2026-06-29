@@ -11,6 +11,7 @@ use crate::{applications::ApplicationsLens, lens::Lens};
 
 mod applications;
 mod lens;
+mod lenses;
 
 #[derive(Debug, Default)]
 pub struct App {
@@ -20,37 +21,7 @@ pub struct App {
 }
 
 fn main() -> color_eyre::Result<()> {
-    let lenses: Vec<Box<dyn Lens>> = vec![Box::new(ApplicationsLens::new())];
-    let mut app = App::new(vec![
-        "Item 1".to_string(),
-        "Item 2".to_string(),
-        "Item 3".to_string(),
-        "Item 4".to_string(),
-        "Item 5".to_string(),
-        "Item 6".to_string(),
-        "Item 7".to_string(),
-        "Item 8".to_string(),
-        "Item 9".to_string(),
-        "Item 10".to_string(),
-        "Item 11".to_string(),
-        "Item 12".to_string(),
-        "Item 13".to_string(),
-        "Item 14".to_string(),
-        "Item 15".to_string(),
-        "Item 16".to_string(),
-        "Item 17".to_string(),
-        "Item 18".to_string(),
-        "Item 19".to_string(),
-        "Item 20".to_string(),
-        "Item 21".to_string(),
-        "Item 22".to_string(),
-        "Item 23".to_string(),
-        "Item 24".to_string(),
-        "Item 25".to_string(),
-        "Item 26".to_string(),
-        "Item 27".to_string(),
-        "Item 28".to_string(),
-    ]);
+    let mut app = App::new(Vec::new());
     color_eyre::install()?;
     ratatui::run(|terminal| app.run(terminal))?;
     Ok(())
@@ -120,6 +91,14 @@ impl App {
     }
 
     fn render(&mut self, frame: &mut Frame, textarea: &mut TextArea) {
+        // MARK: search
+        let lens = lenses::lenses();
+        let results = lens[0].search(&self.query).unwrap();
+        for i in results {
+            self.items.push(i.title);
+        }
+
+        // MARK: list
         let list = List::new(self.items.clone())
             .highlight_style(
                 Style::new()
