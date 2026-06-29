@@ -7,5 +7,6 @@ edition = "2024"
 color-eyre = "0.6.5"
 nucleo = "0.5.0"
 ratatui = "0.30.2"
+ratatui-textarea = "0.9.2"
 serde = { version = "1.0.228", features = [ "derive" ] }
 serde_yaml = "0.9.34"
