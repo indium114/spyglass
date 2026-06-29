@@ -2,7 +2,7 @@ use ratatui::{
     DefaultTerminal, Frame,
     crossterm::event::{self, Event, KeyEventKind},
     layout::{Constraint, Direction, Layout},
-    widgets::{Block, Borders, Paragraph},
+    widgets::{Block, BorderType, Borders, Paragraph},
 };
 
 fn main() -> color_eyre::Result<()> {
@@ -39,19 +39,35 @@ fn render(frame: &mut Frame) {
         .split(frame.area());
 
     frame.render_widget(
-        Paragraph::new("[Lens 1] | Lens 2 | Lens 3 | Lens 4").block(Block::new().borders(Borders::ALL)),
+        Paragraph::new("[Lens 1] | Lens 2 | Lens 3 | Lens 4").block(
+            Block::new()
+                .borders(Borders::ALL)
+                .border_type(BorderType::Rounded),
+        ),
         layout[0],
     );
     frame.render_widget(
-        Paragraph::new("Result 1\nResult 2\nResult 3\nResult 4\nResult 5").block(Block::new().borders(Borders::ALL)),
+        Paragraph::new("Result 1\nResult 2\nResult 3\nResult 4\nResult 5").block(
+            Block::new()
+                .borders(Borders::ALL)
+                .border_type(BorderType::Rounded),
+        ),
         layout[1],
     );
     frame.render_widget(
-        Paragraph::new("This is a description. The quick brown fox jumps over the lazy dog").block(Block::new().borders(Borders::ALL)),
+        Paragraph::new("This is a description. The quick brown fox jumps over the lazy dog").block(
+            Block::new()
+                .borders(Borders::ALL)
+                .border_type(BorderType::Rounded),
+        ),
         layout[2],
     );
     frame.render_widget(
-        Paragraph::new("> Search").block(Block::new().borders(Borders::ALL)),
+        Paragraph::new("> Search").block(
+            Block::new()
+                .borders(Borders::ALL)
+                .border_type(BorderType::Rounded),
+        ),
         layout[3],
     );
 }
