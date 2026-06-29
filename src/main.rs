@@ -7,6 +7,9 @@ use ratatui::{
 };
 use ratatui_textarea::TextArea;
 
+use crate::{applications::ApplicationsLens, lens::Lens};
+
+mod applications;
 mod lens;
 
 #[derive(Debug, Default)]
@@ -17,6 +20,7 @@ pub struct App {
 }
 
 fn main() -> color_eyre::Result<()> {
+    let lenses: Vec<Box<dyn Lens>> = vec![Box::new(ApplicationsLens::new())];
     let mut app = App::new(vec![
         "Item 1".to_string(),
         "Item 2".to_string(),
@@ -179,7 +183,12 @@ impl App {
                 .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
         );
         textarea.set_placeholder_text(" Search...");
-        self.query = textarea.lines().join(" ").trim_end().to_string();
+        self.query = textarea
+            .lines()
+            .join(" ")
+            .trim_end()
+            .to_lowercase()
+            .to_string();
 
         frame.render_widget(&*textarea, layout[3]);
     }
