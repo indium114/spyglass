@@ -1,5 +1,5 @@
 {
-  description = "spyglass devshell and package";
+  description = "rust devshell and package, created by scaffolder";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -12,38 +12,30 @@
         pkgs = import nixpkgs { inherit system; };
       in {
         devShells.default = pkgs.mkShell {
-          name = "spyglass-devshell";
+          name = "rust-devshell";
 
           packages = with pkgs; [
-            go
-            gopls
-            gotools
-            delve
-            just
+            cargo
+            rustc
+            rustfmt
+            rust-analyzer
+            clippy
+            pkg-config
           ];
         };
 
-        packages.spyglass = pkgs.buildGoModule {
-          pname = "spyglass";
-          version = "2026.06.28-a";
+        packages.spyglass = pkgs.rustPlatform.buildRustPackage {
+          name = "spyglass";
+          version = "2.0.0";
 
-          src = self;
+          src = ./.;
 
-          vendorHash = "sha256-XmWORop+D+zY0hU2hb9CC2xwihQ/5aprh02Yj6zlyo8=";
-
-          subPackages = [ "." ];
-          ldflags = [ "-s" "-w" ];
-
-          meta = with pkgs.lib; {
-            description = "An extensible search tool, inspired by Raycast and Vicinae";
-            license = licenses.mit;
-            platforms = platforms.all;
-          };
+          cargoLock.lockFile = ./Cargo.lock;
         };
 
         apps.spyglass = {
           type = "app";
-          program = "${self.packages.${system}.spyglass}/bin/spyglass";
+          program = "${self.packages.${pkgs.stdenv.hostPlatform.system}.spyglass}/bin/spyglass";
         };
       });
 }
