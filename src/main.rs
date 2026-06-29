@@ -177,7 +177,7 @@ impl App {
                 .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
         );
         textarea.set_placeholder_text(" Search...");
-        self.query = textarea.lines().join(" ");
+        self.query = textarea.lines().join(" ").trim_end().to_string();
 
         frame.render_widget(&*textarea, layout[3]);
     }
