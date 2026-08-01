@@ -7,7 +7,7 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
 };
 use ratatui_textarea::TextArea;
-use spyglass::{Entry, Lens, apps::Apps, web::Web};
+use spyglass::{Entry, Lens, apps::Apps, web::Web, power::Power};
 
 struct App {
     state: ListState,
@@ -36,7 +36,11 @@ impl App {
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> std::io::Result<()> {
         // MARK: lenses
         // NOTE: add lenses to vector below VVVVVV
-        let lenses: Vec<Box<dyn Lens>> = vec![Box::new(Apps), Box::new(Web)];
+        let lenses: Vec<Box<dyn Lens>> = vec![Box::new(Apps), Box::new(Web), Box::new(Power)];
+
+        if self.state.selected().is_none() {
+            self.state.select(Some(0));
+        }
 
         let mut textarea = TextArea::default();
         while self.running {

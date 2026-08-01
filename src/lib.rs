@@ -1,4 +1,5 @@
 pub mod apps;
+pub mod power;
 pub mod web;
 
 pub trait Lens {

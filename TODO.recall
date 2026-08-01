@@ -10,13 +10,6 @@
     "name": "create",
     "prio": 2,
     "state": 0,
-    "id": 1,
-    "project": "power"
-  },
-  {
-    "name": "create",
-    "prio": 2,
-    "state": 0,
     "id": 2,
     "project": "clipboard"
   },
