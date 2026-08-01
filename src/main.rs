@@ -7,7 +7,9 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
 };
 use ratatui_textarea::TextArea;
-use spyglass::{Entry, Lens, apps::Apps, clipboard::Clipboard, power::Power, web::Web};
+use spyglass::{
+    Entry, Lens, apps::Apps, clipboard::Clipboard, nerdfont::NerdFont, power::Power, web::Web,
+};
 
 struct App {
     state: ListState,
@@ -39,6 +41,7 @@ impl App {
         let lenses: Vec<Box<dyn Lens>> = vec![
             Box::new(Apps),
             Box::new(Power),
+            Box::new(NerdFont::new()),
             Box::new(Clipboard),
             Box::new(Web),
         ];

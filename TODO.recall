@@ -9,7 +9,7 @@
   {
     "name": "create",
     "prio": 2,
-    "state": 0,
+    "state": 1,
     "id": 4,
     "project": "nerdfont"
   },
