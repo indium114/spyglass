@@ -57,7 +57,7 @@ impl App {
         if self.query.contains('#') {
             let split = self.query.split('#').collect::<Vec<&str>>();
             let lens_filter: String = split[0].to_string();
-            let query = split[1].to_string();
+            let query = split[1].trim().to_string();
 
             for lens in lenses {
                 if lens.name() == lens_filter {
@@ -71,7 +71,7 @@ impl App {
             }
         } else {
             for lens in lenses {
-                for entry in lens.search(self.query.clone()) {
+                for entry in lens.search(self.query.trim().to_string()) {
                     self.results.push(Result {
                         lens_name: lens.name(),
                         entry: entry,
