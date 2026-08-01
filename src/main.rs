@@ -18,7 +18,7 @@ struct App {
 impl App {
     pub fn new() -> Self {
         let mut list_state = ListState::default();
-        list_state.select(Some(0));
+        list_state.select(Some(1));
         Self {
             state: list_state,
             running: true,
@@ -128,6 +128,8 @@ impl App {
             Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
                 match key_event.code {
                     KeyCode::Esc => self.running = false,
+                    KeyCode::Up => self.state.select_previous(),
+                    KeyCode::Down => self.state.select_next(),
                     _ => {
                         textarea.input(key_event);
                     }
