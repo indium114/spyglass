@@ -35,6 +35,7 @@ impl App {
 
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> std::io::Result<()> {
         // MARK: lenses
+        // NOTE: add lenses to vector below VVVVVV
         let lenses: Vec<Box<dyn Lens>> = vec![Box::new(Dummy)];
 
         let mut textarea = TextArea::default();
