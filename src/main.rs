@@ -49,8 +49,17 @@ impl App {
         // MARK: searching
         self.results = Vec::new();
         if self.query.contains('#') {
-            let lens_filter: String = self.query.split('#').collect::<Vec<&str>>()[0].to_string();
-            println!("{lens_filter}");
+            let split = self.query.split('#').collect::<Vec<&str>>();
+            let lens_filter: String = split[0].to_string();
+            let query = split[1].to_string();
+
+            for lens in lenses {
+                if lens.name() == lens_filter {
+                    for result in lens.search(query.clone()) {
+                        self.results.push(result);
+                    }
+                }
+            }
         } else {
             for lens in lenses {
                 for entry in lens.search(self.query.clone()) {

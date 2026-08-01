@@ -1,5 +1,3 @@
-use ratatui::text::Text;
-
 pub mod dummy;
 
 pub trait Lens {
@@ -14,9 +12,3 @@ pub struct Entry {
     pub icon: String,
     pub enter: fn(),
 }
-
-// impl<'a> From<&'a Entry> for Text<'a> {
-//     fn from(entry: &'a Entry) -> Self {
-//         Text::from(entry.title.clone())
-//     }
-// }
