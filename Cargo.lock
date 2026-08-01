@@ -1303,6 +1303,7 @@ name = "spyglass"
 version = "2.0.0"
 dependencies = [
  "dirs",
+ "libc",
  "ratatui",
  "ratatui-textarea",
  "serde",
