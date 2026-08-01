@@ -10,5 +10,5 @@ pub struct Entry {
     pub id: String,
     pub title: String,
     pub icon: String,
-    pub enter: fn(),
+    pub enter: fn(&Entry),
 }

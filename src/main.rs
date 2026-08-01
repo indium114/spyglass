@@ -150,6 +150,14 @@ impl App {
                     KeyCode::Esc => self.running = false,
                     KeyCode::Up => self.state.select_previous(),
                     KeyCode::Down => self.state.select_next(),
+                    KeyCode::Enter => {
+                        if let Some(i) = self.state.selected() {
+                            if let Some(result) = self.results.get(i) {
+                                (result.entry.enter)(&result.entry);
+                                self.running = false;
+                            }
+                        }
+                    }
                     _ => {
                         textarea.input(key_event);
                     }

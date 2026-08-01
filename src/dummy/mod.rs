@@ -2,7 +2,9 @@ use crate::{Entry, Lens};
 
 pub struct Dummy;
 
-fn function() {}
+fn function(entry: &Entry) {
+    println!("{}", entry.title)
+}
 
 impl Lens for Dummy {
     fn name(&self) -> String {
