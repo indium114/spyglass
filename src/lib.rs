@@ -1,5 +1,4 @@
 pub mod apps;
-pub mod dummy;
 pub mod web;
 
 pub trait Lens {
