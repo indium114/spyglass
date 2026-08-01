@@ -1,13 +1,13 @@
 use ratatui::{
-    DefaultTerminal, Frame,
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     text::{Line, Span},
     widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
+    DefaultTerminal, Frame,
 };
 use ratatui_textarea::TextArea;
-use spyglass::{Entry, Lens, apps::Apps, web::Web, power::Power};
+use spyglass::{apps::Apps, power::Power, web::Web, Entry, Lens};
 
 struct App {
     state: ListState,

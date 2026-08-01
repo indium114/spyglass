@@ -1,5 +1,9 @@
 use serde::Deserialize;
-use std::{fs, process::{Command, Stdio}, os::unix::process::CommandExt};
+use std::{
+    fs,
+    os::unix::process::CommandExt,
+    process::{Command, Stdio},
+};
 
 use crate::{Entry, Lens};
 

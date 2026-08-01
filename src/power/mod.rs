@@ -1,4 +1,7 @@
-use std::{process::{Command, Stdio}, os::unix::process::CommandExt};
+use std::{
+    os::unix::process::CommandExt,
+    process::{Command, Stdio},
+};
 
 use crate::{Entry, Lens};
 
