@@ -3,43 +3,60 @@ use ratatui::{
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
-    widgets::{Block, BorderType, Borders, ListState, Paragraph},
+    widgets::{Block, BorderType, Borders, List, ListState, Paragraph},
 };
 use ratatui_textarea::TextArea;
+use spyglass::{Entry, Lens, dummy::Dummy};
 
 struct App {
     state: ListState,
     running: bool,
     query: String,
+    results: Vec<Entry>,
 }
 
 impl App {
     pub fn new() -> Self {
+        let mut list_state = ListState::default();
+        list_state.select(Some(0));
         Self {
-            state: ListState::default(),
+            state: list_state,
             running: true,
             query: "".to_string(),
+            results: Vec::new(),
         }
     }
 
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> std::io::Result<()> {
+        // MARK: lenses
+        let lenses: Vec<Box<dyn Lens>> = vec![Box::new(Dummy)];
+
         let mut textarea = TextArea::default();
         while self.running {
             terminal.draw(|frame| {
-                self.render(frame, &mut textarea);
+                self.render(frame, &mut textarea, &lenses);
             })?;
             self.keybinds(&mut textarea)?;
+            terminal.draw(|frame| {
+                self.render(frame, &mut textarea, &lenses);
+            })?;
         }
 
         Ok(())
     }
 
-    fn render(&mut self, frame: &mut Frame, textarea: &mut TextArea) {
+    fn render(&mut self, frame: &mut Frame, textarea: &mut TextArea, lenses: &Vec<Box<dyn Lens>>) {
         // MARK: searching
+        self.results = Vec::new();
         if self.query.contains('#') {
             let lens_filter: String = self.query.split('#').collect::<Vec<&str>>()[0].to_string();
             println!("{lens_filter}");
         } else {
+            for lens in lenses {
+                for entry in lens.search(self.query.clone()) {
+                    self.results.push(entry);
+                }
+            }
         }
 
         // MARK: rendering
@@ -78,6 +95,23 @@ impl App {
             .to_string();
 
         frame.render_widget(&*textarea, topbar_layout[1]);
+
+        // MARK: list
+        let list = List::new(
+            self.results
+                .iter()
+                .map(|n| n.title.clone())
+                .collect::<Vec<String>>(),
+        )
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .border_style(Style::new().fg(Color::Rgb(203, 166, 247)))
+                .border_type(BorderType::Rounded),
+        )
+        .highlight_symbol("|")
+        .highlight_style(Style::new().fg(Color::Rgb(203, 166, 247)));
+        frame.render_stateful_widget(list, master_layout[1], &mut self.state);
     }
 
     fn keybinds(&mut self, textarea: &mut TextArea) -> std::io::Result<()> {
