@@ -834,6 +834,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "percent-encoding"
+version = "2.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9b4f627cb1b25917193a259e49bdad08f671f8d9708acfd5fe0a8c1455d87220"
+
+[[package]]
 name = "pest"
 version = "2.8.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1308,6 +1314,7 @@ dependencies = [
  "ratatui-textarea",
  "serde",
  "toml",
+ "url-escape",
 ]
 
 [[package]]
@@ -1592,6 +1599,15 @@ name = "unicode-width"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4ac048d71ede7ee76d585517add45da530660ef4390e49b098733c6e897f254"
+
+[[package]]
+name = "url-escape"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fd4105a4fc511f6b1c9616a372a1313ae7c15afcaac839617c1c7cf25ce0a965"
+dependencies = [
+ "percent-encoding",
+]
 
 [[package]]
 name = "utf8parse"

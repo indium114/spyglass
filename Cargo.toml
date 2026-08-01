@@ -10,3 +10,4 @@ ratatui = "0.30.2"
 ratatui-textarea = "0.9.2"
 serde = { version = "1.0.229", features = ["derive"] }
 toml = "1.1.4"
+url-escape = "0.1.2"

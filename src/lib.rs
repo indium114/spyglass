@@ -1,5 +1,6 @@
 pub mod apps;
 pub mod dummy;
+pub mod web;
 
 pub trait Lens {
     /// returns the lens's name, conventionally all-lowercase

@@ -24,13 +24,6 @@
     "name": "create",
     "prio": 2,
     "state": 0,
-    "id": 3,
-    "project": "web"
-  },
-  {
-    "name": "create",
-    "prio": 2,
-    "state": 0,
     "id": 4,
     "project": "nerdfont"
   },
