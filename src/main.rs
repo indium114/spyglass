@@ -3,7 +3,7 @@ use ratatui::{
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
-    widgets::{Block, BorderType, Borders, ListState},
+    widgets::{Block, BorderType, Borders, ListState, Paragraph},
 };
 use ratatui_textarea::TextArea;
 
@@ -36,14 +36,23 @@ impl App {
 
     fn render(&mut self, frame: &mut Frame, textarea: &mut TextArea) {
         let master_layout = Layout::default()
-            .direction(Direction::Horizontal)
-            .constraints(vec![Constraint::Length(10), Constraint::Fill(1)])
-            .split(frame.area());
-
-        let search_layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![Constraint::Length(3), Constraint::Fill(1)])
-            .split(master_layout[1]);
+            .split(frame.area());
+        let topbar_layout = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints(vec![Constraint::Length(6), Constraint::Fill(1)])
+            .split(master_layout[0]);
+
+        frame.render_widget(
+            Paragraph::new("   ").block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(Color::Rgb(203, 166, 247)))
+                    .border_type(BorderType::Rounded),
+            ),
+            topbar_layout[0],
+        );
 
         // MARK: textarea
         textarea.set_block(
@@ -52,7 +61,7 @@ impl App {
                 .border_type(BorderType::Rounded)
                 .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
         );
-        textarea.set_placeholder_text(" Search...");
+        textarea.set_placeholder_text("Search...");
         self.query = textarea
             .lines()
             .join(" ")
@@ -60,7 +69,7 @@ impl App {
             .to_lowercase()
             .to_string();
 
-        frame.render_widget(&*textarea, search_layout[0]);
+        frame.render_widget(&*textarea, topbar_layout[1]);
     }
 
     fn keybinds(&mut self, textarea: &mut TextArea) -> std::io::Result<()> {
