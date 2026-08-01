@@ -2,8 +2,8 @@
 
 ## Configuring lenses
 
-[Applications lens](lenses/applications.md)
-[SearXNG lens](lenses/searxng.md)
+[apps# lens](lenses/apps.md)
+[web# lens](lenses/web.md)
 
 ## Registering lenses
 
