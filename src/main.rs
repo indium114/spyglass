@@ -35,6 +35,14 @@ impl App {
     }
 
     fn render(&mut self, frame: &mut Frame, textarea: &mut TextArea) {
+        // MARK: searching
+        if self.query.contains('#') {
+            let lens_filter: String = self.query.split('#').collect::<Vec<&str>>()[0].to_string();
+            println!("{lens_filter}");
+        } else {
+        }
+
+        // MARK: rendering
         let master_layout = Layout::default()
             .direction(Direction::Vertical)
             .constraints(vec![Constraint::Length(3), Constraint::Fill(1)])
