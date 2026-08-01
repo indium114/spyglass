@@ -10,8 +10,13 @@ impl Lens for Dummy {
     }
 
     fn search(&self, query: String) -> Vec<Entry> {
+        let max = match query.len() {
+            0 => 10,
+            _ => query.len(),
+        };
+
         let mut entries: Vec<Entry> = Vec::new();
-        for i in 1..=(query.len() as u64) {
+        for i in 1..=max {
             entries.push(Entry {
                 id: "entry no.".to_string() + &i.to_string(),
                 title: "entry no. ".to_string() + &i.to_string(),

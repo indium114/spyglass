@@ -3,7 +3,8 @@ use ratatui::{
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
-    widgets::{Block, BorderType, Borders, List, ListState, Paragraph},
+    text::{Line, Span},
+    widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
 };
 use ratatui_textarea::TextArea;
 use spyglass::{Entry, Lens, dummy::Dummy};
@@ -12,13 +13,18 @@ struct App {
     state: ListState,
     running: bool,
     query: String,
-    results: Vec<Entry>,
+    results: Vec<Result>,
+}
+
+struct Result {
+    lens_name: String,
+    entry: Entry,
 }
 
 impl App {
     pub fn new() -> Self {
         let mut list_state = ListState::default();
-        list_state.select(Some(1));
+        list_state.select(Some(0));
         Self {
             state: list_state,
             running: true,
@@ -55,15 +61,21 @@ impl App {
 
             for lens in lenses {
                 if lens.name() == lens_filter {
-                    for result in lens.search(query.clone()) {
-                        self.results.push(result);
+                    for entry in lens.search(query.clone()) {
+                        self.results.push(Result {
+                            lens_name: lens.name(),
+                            entry: entry,
+                        });
                     }
                 }
             }
         } else {
             for lens in lenses {
                 for entry in lens.search(self.query.clone()) {
-                    self.results.push(entry);
+                    self.results.push(Result {
+                        lens_name: lens.name(),
+                        entry: entry,
+                    });
                 }
             }
         }
@@ -109,8 +121,16 @@ impl App {
         let list = List::new(
             self.results
                 .iter()
-                .map(|n| n.title.clone())
-                .collect::<Vec<String>>(),
+                .map(|n| {
+                    ListItem::new(Line::from(vec![
+                        Span::styled(
+                            n.lens_name.clone() + "#",
+                            Style::default().fg(Color::Yellow),
+                        ),
+                        Span::raw(n.entry.title.clone()),
+                    ]))
+                })
+                .collect::<Vec<ListItem>>(),
         )
         .block(
             Block::default()
