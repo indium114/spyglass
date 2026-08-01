@@ -127,6 +127,9 @@ impl App {
                             n.lens_name.clone() + "#",
                             Style::default().fg(Color::Yellow),
                         ),
+                        Span::raw(" "),
+                        Span::raw(n.entry.icon.clone()),
+                        Span::raw(" "),
                         Span::raw(n.entry.title.clone()),
                     ]))
                 })

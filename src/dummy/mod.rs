@@ -22,7 +22,7 @@ impl Lens for Dummy {
             entries.push(Entry {
                 id: "entry no.".to_string() + &i.to_string(),
                 title: "entry no. ".to_string() + &i.to_string(),
-                icon: "".to_string(),
+                icon: "".to_string(),
                 enter: function,
             });
         }
