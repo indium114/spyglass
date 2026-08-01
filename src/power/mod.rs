@@ -29,8 +29,8 @@ impl Lens for Power {
         "power".to_string()
     }
 
-    fn search(&self, _query: String) -> Vec<Entry> {
-        vec![
+    fn search(&self, query: String) -> Vec<Entry> {
+        let entries: Vec<Entry> = vec![
             Entry {
                 id: "poweroff".to_string(),
                 title: "Shutdown".to_string(),
@@ -52,6 +52,15 @@ impl Lens for Power {
                 meta: "suspend".to_string(),
                 enter: enter,
             },
-        ]
+        ];
+
+        let mut final_entries: Vec<Entry> = Vec::new();
+        for entry in entries {
+            if entry.title.to_lowercase().contains(&query) {
+                final_entries.push(entry);
+            }
+        }
+
+        final_entries
     }
 }

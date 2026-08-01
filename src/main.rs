@@ -1,13 +1,13 @@
 use ratatui::{
+    DefaultTerminal, Frame,
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     text::{Line, Span},
     widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
-    DefaultTerminal, Frame,
 };
 use ratatui_textarea::TextArea;
-use spyglass::{apps::Apps, power::Power, web::Web, Entry, Lens};
+use spyglass::{Entry, Lens, apps::Apps, power::Power, web::Web};
 
 struct App {
     state: ListState,
@@ -36,7 +36,7 @@ impl App {
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> std::io::Result<()> {
         // MARK: lenses
         // NOTE: add lenses to vector below VVVVVV
-        let lenses: Vec<Box<dyn Lens>> = vec![Box::new(Apps), Box::new(Web), Box::new(Power)];
+        let lenses: Vec<Box<dyn Lens>> = vec![Box::new(Apps), Box::new(Power), Box::new(Web)];
 
         if self.state.selected().is_none() {
             self.state.select(Some(0));
