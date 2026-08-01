@@ -23,6 +23,7 @@ impl Lens for Dummy {
                 id: "entry no.".to_string() + &i.to_string(),
                 title: "entry no. ".to_string() + &i.to_string(),
                 icon: "".to_string(),
+                meta: "".to_string(),
                 enter: function,
             });
         }
