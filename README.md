@@ -49,4 +49,4 @@ cargo install spyglass
 
 ## Documentation
 
-For instructions on how to configure the default `Applications` lens, how to register new lenses, and how to create your own lens, see the [documentation home](/docs/home.md)
+For instructions on how to configure the default lenses, see the [documentation home](/docs/home.md)
