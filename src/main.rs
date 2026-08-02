@@ -11,6 +11,7 @@ use spyglass::{
     Entry, Lens, apps::Apps, clipboard::Clipboard, nerdfont::NerdFont, power::Power,
     process::Procs, web::Web,
 };
+use std::{thread, time::Duration};
 
 struct App {
     state: ListState,
@@ -50,6 +51,11 @@ impl App {
 
         if self.state.selected().is_none() {
             self.state.select(Some(0));
+        }
+
+        thread::sleep(Duration::from_millis(50));
+        while ratatui::crossterm::terminal::size().map(|(w, h)| w == 0 || h == 0).unwrap_or(true) {
+            thread::sleep(Duration::from_millis(10));
         }
 
         let mut textarea = TextArea::default();
