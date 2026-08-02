@@ -42,7 +42,7 @@ impl Lens for Procs {
             if name.to_lowercase().contains(&query) {
                 entries.push(Entry {
                     id: pid.to_string(),
-                    title: pid.to_string() + &name,
+                    title: pid.to_string() + " " + &name,
                     icon: "".to_string(),
                     meta: pid.to_string(),
                     enter,
