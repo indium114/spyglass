@@ -1,9 +1,27 @@
-use std::fs;
+use serde::Deserialize;
+use std::{
+    collections::HashMap,
+    fs,
+    io::Write,
+    process::{Command, Stdio},
+    sync::LazyLock,
+};
 
 use crate::{Entry, Lens};
 
 static FETCH_URL: &'static str =
     "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/refs/heads/master/glyphnames.json";
+
+static MAX_RESULTS: usize = 50;
+static GLYPHS: LazyLock<Vec<GlyphEntry>> = LazyLock::new(load_glyphs);
+
+#[derive(Deserialize)]
+struct GlyphValue {
+    #[serde(default)]
+    char: String,
+    #[serde(default)]
+    code: String,
+}
 
 struct GlyphEntry {
     name: String,
@@ -11,7 +29,13 @@ struct GlyphEntry {
     code: String,
 }
 
-// PERF: fix whatever is slowing this down
+fn glyphs_path() -> String {
+    dirs::cache_dir()
+        .map(|s| s.to_string_lossy().into_owned())
+        .unwrap_or_default()
+        + "/spyglass/nerdfont/glyphnames.json"
+}
+
 fn download_glyphs() -> Result<(), Box<dyn std::error::Error>> {
     let dir = dirs::cache_dir()
         .map(|s| s.to_string_lossy().into_owned())
@@ -30,14 +54,49 @@ fn download_glyphs() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-pub struct NerdFont {
-    glyphs: Vec<GlyphEntry>,
+fn load_glyphs() -> Vec<GlyphEntry> {
+    let _ = download_glyphs();
+    let contents = fs::read_to_string(glyphs_path()).unwrap_or_default();
+    let map: HashMap<String, GlyphValue> = serde_json::from_str(&contents).unwrap_or_default();
+
+    map.into_iter()
+        .filter(|(_, v)| !v.char.is_empty())
+        .map(|(name, v)| GlyphEntry {
+            name: name.to_lowercase(),
+            char: v.char,
+            code: v.code,
+        })
+        .collect()
 }
+
+fn copy(entry: &Entry) {
+    let tool: &[&str] = if Command::new("wl-copy").stdin(Stdio::null()).spawn().is_ok() {
+        &["wl-copy"]
+    } else if Command::new("xclip").stdin(Stdio::null()).spawn().is_ok() {
+        &["xclip", "-selection", "clipboard"]
+    } else if Command::new("pbcopy").stdin(Stdio::null()).spawn().is_ok() {
+        &["pbcopy"]
+    } else {
+        return;
+    };
+
+    let mut cmd = Command::new(tool[0])
+        .args(&tool[1..])
+        .stdin(Stdio::piped())
+        .spawn()
+        .expect("clipboard tool failed");
+    if let Some(mut stdin) = cmd.stdin.take() {
+        let _ = stdin.write_all(entry.icon.as_bytes());
+    }
+    let _ = cmd.wait();
+}
+
+pub struct NerdFont {}
 
 impl NerdFont {
     pub fn new() -> Self {
         let _ = download_glyphs();
-        Self { glyphs: Vec::new() }
+        Self {}
     }
 }
 
@@ -47,13 +106,18 @@ impl Lens for NerdFont {
     }
 
     fn search(&self, query: String) -> Vec<Entry> {
-        if query != "".to_string() {
-            let _ = download_glyphs();
-            let entries: Vec<Entry> = Vec::new();
-
-            entries
-        } else {
-            Vec::new()
-        }
+        let q = query.to_lowercase();
+        GLYPHS
+            .iter()
+            .filter(|g| q.is_empty() || g.name.contains(&q))
+            .take(MAX_RESULTS)
+            .map(|g| Entry {
+                id: g.name.clone(),
+                title: g.name.clone(),
+                icon: g.char.clone(),
+                meta: g.code.clone(),
+                enter: copy,
+            })
+            .collect()
     }
 }
