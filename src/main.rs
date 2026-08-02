@@ -116,6 +116,16 @@ impl App {
         // MARK: textarea
         textarea.set_block(
             Block::new()
+                .title_bottom(
+                    Line::from(
+                        "<".to_string()
+                            + &(self.state.selected().unwrap_or(0) + 1).to_string()
+                            + "/"
+                            + &self.results.len().to_string()
+                            + ">",
+                    )
+                    .right_aligned(),
+                )
                 .borders(Borders::ALL)
                 .border_type(BorderType::Rounded)
                 .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
