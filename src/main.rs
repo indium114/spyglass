@@ -1,14 +1,14 @@
 use ratatui::{
-    DefaultTerminal, Frame,
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     text::{Line, Span},
     widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
+    DefaultTerminal, Frame,
 };
 use ratatui_textarea::TextArea;
 use spyglass::{
-    Entry, Lens, apps::Apps, clipboard::Clipboard, nerdfont::NerdFont, power::Power, web::Web,
+    apps::Apps, clipboard::Clipboard, nerdfont::NerdFont, power::Power, web::Web, Entry, Lens,
 };
 
 struct App {
