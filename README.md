@@ -34,7 +34,7 @@ environment.systemPackages = [
 Simply run the following command:
 
 ```shell
-cargo install spyglass
+cargo install --git https://github.com/indium114/spyglass
 ```
 
 > [!NOTE]
