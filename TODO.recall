@@ -1,19 +1,5 @@
 [
   {
-    "name": "change directory to regular applications dir",
-    "prio": 3,
-    "state": 0,
-    "id": 0,
-    "project": "apps"
-  },
-  {
-    "name": "create",
-    "prio": 2,
-    "state": 2,
-    "id": 4,
-    "project": "nerdfont"
-  },
-  {
     "name": "create",
     "prio": 1,
     "state": 0,
