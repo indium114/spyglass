@@ -2,6 +2,7 @@ pub mod apps;
 pub mod clipboard;
 pub mod nerdfont;
 pub mod power;
+pub mod process;
 pub mod web;
 
 pub trait Lens {
