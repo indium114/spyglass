@@ -14,7 +14,7 @@ fn load_procs() -> HashMap<Pid, String> {
     let mut procs: HashMap<Pid, String> = HashMap::new();
 
     for (pid, proc) in system.processes() {
-        procs.insert(pid.clone(), proc.name().to_string_lossy().into_owned());
+        procs.insert(*pid, proc.name().to_string_lossy().into_owned());
     }
 
     procs
@@ -42,7 +42,7 @@ impl Lens for Procs {
             if name.to_lowercase().contains(&query) {
                 entries.push(Entry {
                     id: pid.to_string(),
-                    title: pid.to_string() + " " + &name,
+                    title: pid.to_string() + " " + name,
                     icon: "".to_string(),
                     meta: pid.to_string(),
                     enter,
