@@ -1,3 +1,7 @@
-/spyglass
-.direnv
-result
+/result
+/.direnv
+# Added by goreleaser init:
+dist/
+.intentionally-empty-file.o
+target/
+/.zig-cache

@@ -1,4 +1,4 @@
-name: Build Go project
+name: Build Rust project
 
 on:
   push:
@@ -14,18 +14,16 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.25.6'
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
 
       - name: Build
-        run: go build -v ./...
+        run: cargo build --release --verbose
 
   nix-build:
     name: Nix Build (${{ matrix.os }})
@@ -33,7 +31,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4

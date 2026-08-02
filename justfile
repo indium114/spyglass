@@ -2,7 +2,7 @@ build:
     nix build .#spyglass
 
 run:
-    go run .
+    cargo run
 
 try:
     ghostty --title=Spyglass -e ./result/bin/spyglass
