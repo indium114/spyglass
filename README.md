@@ -14,7 +14,10 @@ Simply add the repo to your flake inputs...
 
 ```nix
 inputs = {
-  spyglass.url = "github:indium114/spyglass";
+  spyglass = {
+    url = "github:indium114/spyglass";
+    inputs.nixpkgs.follows = "nixpkgs";
+  }
 };
 ```
 
@@ -26,23 +29,23 @@ environment.systemPackages = [
 ];
 ```
 
-### with Go
+### with Cargo
 
 Simply run the following command:
 
 ```shell
-go install github.com/indium114/spyglass@latest
+cargo install spyglass
 ```
 
 > [!NOTE]
-> Ensure that `~/go/bin` is in your $PATH
+> Ensure that `~/.cargo/bin` is in your $PATH
 
 ## Basic Navigation
 
 - `Type` to search
-- Use `Tab` to switch Lenses (tabs)
 - Use `Up/Down` to select results
-- Use `Shift+Tab` to open the Context Menu
+- Search a specific lens with `lensname#`
+  - e.g. `apps#` for apps
 
 ## Documentation
 

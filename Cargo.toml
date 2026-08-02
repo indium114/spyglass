@@ -1,7 +1,11 @@
 [package]
 name = "spyglass"
+description = "An extensible TUI search tool"
 version = "2.0.0"
 edition = "2024"
+license = "MIT"
+repository = "https://github.com/indium114/spyglass"
+homepage = "https://github.com/indium114/spyglass"
 
 [dependencies]
 dirs = "6.0.0"
