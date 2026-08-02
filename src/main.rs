@@ -53,7 +53,7 @@ impl App {
             self.state.select(Some(0));
         }
 
-        thread::sleep(Duration::from_millis(50));
+        thread::sleep(Duration::from_millis(80));
         while ratatui::crossterm::terminal::size().map(|(w, h)| w == 0 || h == 0).unwrap_or(true) {
             thread::sleep(Duration::from_millis(10));
         }
