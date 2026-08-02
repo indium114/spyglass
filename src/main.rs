@@ -1,14 +1,15 @@
 use ratatui::{
+    DefaultTerminal, Frame,
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     text::{Line, Span},
     widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
-    DefaultTerminal, Frame,
 };
 use ratatui_textarea::TextArea;
 use spyglass::{
-    apps::Apps, clipboard::Clipboard, nerdfont::NerdFont, power::Power, web::Web, Entry, Lens,
+    Entry, Lens, apps::Apps, clipboard::Clipboard, nerdfont::NerdFont, power::Power,
+    process::Procs, web::Web,
 };
 
 struct App {
@@ -43,6 +44,7 @@ impl App {
             Box::new(Power),
             Box::new(NerdFont::new()),
             Box::new(Clipboard),
+            Box::new(Procs),
             Box::new(Web),
         ];
 
@@ -178,10 +180,11 @@ impl App {
                     KeyCode::Down => self.state.select_next(),
                     KeyCode::Enter => {
                         if let Some(i) = self.state.selected()
-                            && let Some(result) = self.results.get(i) {
-                                (result.entry.enter)(&result.entry);
-                                self.running = false;
-                            }
+                            && let Some(result) = self.results.get(i)
+                        {
+                            (result.entry.enter)(&result.entry);
+                            self.running = false;
+                        }
                     }
                     _ => {
                         textarea.input(key_event);
