@@ -1,4 +1,4 @@
-use std::{fs, time::Duration};
+use std::fs;
 
 use crate::{Entry, Lens};
 
@@ -16,11 +16,15 @@ fn download_glyphs() -> Result<(), Box<dyn std::error::Error>> {
     let dir = dirs::cache_dir()
         .map(|s| s.to_string_lossy().into_owned())
         .unwrap_or_default()
-        + "/spyglass/nerdfont/glyphnames.json";
+        + "/spyglass/nerdfont";
 
-    if !fs::exists(dir.clone()).unwrap_or(false) {
+    let file = dir.clone() + "/glyphnames.json";
+
+    let _ = fs::create_dir_all(dir.clone());
+
+    if !fs::exists(file.clone()).unwrap_or(false) {
         let content = reqwest::blocking::get(FETCH_URL)?.bytes()?;
-        fs::write(dir.clone(), &content)?;
+        fs::write(file.clone(), &content)?;
     }
 
     Ok(())
