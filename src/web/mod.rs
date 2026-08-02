@@ -16,9 +16,13 @@ fn load() -> WebConfig {
     let dir = dirs::config_dir()
         .map(|s| s.to_string_lossy().into_owned())
         .unwrap_or_default()
-        + "/spyglass/web/config.toml";
+        + "/spyglass/web";
 
-    let contents = fs::read_to_string(dir).expect("web# lens has not been configured yet.\nplease configure it in ~/.config/spyglass/web/config.toml");
+    let _ = fs::create_dir_all(dir.clone());
+
+    let file = dir.clone() + "/config.toml";
+
+    let contents = fs::read_to_string(file).expect("web# lens has not been configured yet.\nplease configure it in ~/.config/spyglass/web/config.toml");
     toml::from_str(&contents).expect("web# lens has not been configured yet or configuration is invalid.\nplease configure it in ~/.config/spyglass/web/config.toml")
 }
 

@@ -21,6 +21,8 @@ fn load() -> Vec<AppConfig> {
         .unwrap_or_default()
         + "/spyglass/applications/";
 
+    let _ = fs::create_dir_all(dir.clone());
+
     for file in fs::read_dir(dir).unwrap() {
         let file = file.unwrap().path();
         if file.extension().is_some_and(|ext| ext == "toml") {
