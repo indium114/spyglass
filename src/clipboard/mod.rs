@@ -37,7 +37,7 @@ impl Lens for Clipboard {
             .expect("failed to run cliphist");
         let lines: Vec<String> = String::from_utf8_lossy(&output.stdout)
             .lines()
-            .map(|l| l.to_string().split('\t').nth(1).unwrap().to_string())
+            .map(|l| l.split('\t').nth(1).unwrap().to_string())
             .collect();
 
         let mut entries: Vec<Entry> = Vec::new();

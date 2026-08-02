@@ -9,7 +9,7 @@ use std::{
 
 use crate::{Entry, Lens};
 
-static FETCH_URL: &'static str =
+static FETCH_URL: &str =
     "https://raw.githubusercontent.com/ryanoasis/nerd-fonts/refs/heads/master/glyphnames.json";
 
 static MAX_RESULTS: usize = 50;
@@ -92,6 +92,12 @@ fn copy(entry: &Entry) {
 }
 
 pub struct NerdFont {}
+
+impl Default for NerdFont {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl NerdFont {
     pub fn new() -> Self {

@@ -77,7 +77,7 @@ impl App {
                     for entry in lens.search(query.clone()) {
                         self.results.push(Result {
                             lens_name: lens.name(),
-                            entry: entry,
+                            entry,
                         });
                     }
                 }
@@ -87,7 +87,7 @@ impl App {
                 for entry in lens.search(self.query.trim().to_string()) {
                     self.results.push(Result {
                         lens_name: lens.name(),
-                        entry: entry,
+                        entry,
                     });
                 }
             }
@@ -177,12 +177,11 @@ impl App {
                     KeyCode::Up => self.state.select_previous(),
                     KeyCode::Down => self.state.select_next(),
                     KeyCode::Enter => {
-                        if let Some(i) = self.state.selected() {
-                            if let Some(result) = self.results.get(i) {
+                        if let Some(i) = self.state.selected()
+                            && let Some(result) = self.results.get(i) {
                                 (result.entry.enter)(&result.entry);
                                 self.running = false;
                             }
-                        }
                     }
                     _ => {
                         textarea.input(key_event);

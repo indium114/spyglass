@@ -51,13 +51,13 @@ impl Lens for Web {
     }
 
     fn search(&self, query: String) -> Vec<Entry> {
-        if query != "" {
+        if !query.is_empty() {
             vec![Entry {
                 id: "web_search".to_string(),
                 title: query.clone(),
                 icon: "".to_string(),
                 meta: query.clone(),
-                enter: enter,
+                enter,
             }]
         } else {
             Vec::new()

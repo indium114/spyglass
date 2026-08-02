@@ -36,21 +36,21 @@ impl Lens for Power {
                 title: "Shutdown".to_string(),
                 icon: "⏻".to_string(),
                 meta: "poweroff".to_string(),
-                enter: enter,
+                enter,
             },
             Entry {
                 id: "reboot".to_string(),
                 title: "Reboot".to_string(),
                 icon: "".to_string(),
                 meta: "reboot".to_string(),
-                enter: enter,
+                enter,
             },
             Entry {
                 id: "suspend".to_string(),
                 title: "Suspend".to_string(),
                 icon: "⏾".to_string(),
                 meta: "suspend".to_string(),
-                enter: enter,
+                enter,
             },
         ];
 

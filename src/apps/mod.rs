@@ -67,7 +67,7 @@ impl Lens for Apps {
                     title: app.name.clone(),
                     icon: app.icon,
                     meta: app.command,
-                    enter: enter,
+                    enter,
                 });
             }
         }
