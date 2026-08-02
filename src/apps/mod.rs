@@ -19,7 +19,7 @@ fn load() -> Vec<AppConfig> {
     let dir = dirs::config_dir()
         .map(|s| s.to_string_lossy().into_owned())
         .unwrap_or_default()
-        + "/spyglass/applications_dev/"; // TODO: change this to regular `applications` dir
+        + "/spyglass/applications/";
 
     for file in fs::read_dir(dir).unwrap() {
         let file = file.unwrap().path();
