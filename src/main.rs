@@ -7,6 +7,7 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
 };
 use ratatui_textarea::TextArea;
+use rayon::prelude::*;
 use spyglass::{
     Entry, Lens, apps::Apps, clipboard::Clipboard, nerdfont::NerdFont, power::Power,
     process::Procs, web::Web,
@@ -151,7 +152,7 @@ impl App {
         // MARK: list
         let list = List::new(
             self.results
-                .iter()
+                .par_iter()
                 .map(|n| {
                     ListItem::new(Line::from(vec![
                         Span::styled(
@@ -172,7 +173,7 @@ impl App {
                 .border_style(Style::new().fg(Color::Rgb(203, 166, 247)))
                 .border_type(BorderType::Rounded),
         )
-        .highlight_symbol("|")
+        .highlight_symbol("▌")
         .highlight_style(Style::new().fg(Color::Rgb(203, 166, 247)));
         frame.render_stateful_widget(list, master_layout[1], &mut self.state);
     }
@@ -205,5 +206,6 @@ impl App {
 }
 
 fn main() -> std::io::Result<()> {
+    let _ = color_eyre::install();
     ratatui::run(|terminal| App::new().run(terminal))
 }
