@@ -205,5 +205,6 @@ impl App {
 }
 
 fn main() -> std::io::Result<()> {
+    let _ = color_eyre::install();
     ratatui::run(|terminal| App::new().run(terminal))
 }
