@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use serde::Deserialize;
 use std::{
     collections::HashMap,
@@ -59,7 +60,7 @@ fn load_glyphs() -> Vec<GlyphEntry> {
     let contents = fs::read_to_string(glyphs_path()).unwrap_or_default();
     let map: HashMap<String, GlyphValue> = serde_json::from_str(&contents).unwrap_or_default();
 
-    map.into_iter()
+    map.into_par_iter()
         .filter(|(_, v)| !v.char.is_empty())
         .map(|(name, v)| GlyphEntry {
             name: name.to_lowercase(),

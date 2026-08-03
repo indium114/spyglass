@@ -7,6 +7,7 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
 };
 use ratatui_textarea::TextArea;
+use rayon::prelude::*;
 use spyglass::{
     Entry, Lens, apps::Apps, clipboard::Clipboard, nerdfont::NerdFont, power::Power,
     process::Procs, web::Web,
@@ -151,7 +152,7 @@ impl App {
         // MARK: list
         let list = List::new(
             self.results
-                .iter()
+                .par_iter()
                 .map(|n| {
                     ListItem::new(Line::from(vec![
                         Span::styled(
