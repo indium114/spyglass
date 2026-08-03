@@ -172,7 +172,7 @@ impl App {
                 .border_style(Style::new().fg(Color::Rgb(203, 166, 247)))
                 .border_type(BorderType::Rounded),
         )
-        .highlight_symbol("|")
+        .highlight_symbol("▌")
         .highlight_style(Style::new().fg(Color::Rgb(203, 166, 247)));
         frame.render_stateful_widget(list, master_layout[1], &mut self.state);
     }
