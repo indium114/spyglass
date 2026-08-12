@@ -3,8 +3,8 @@ use ratatui::{
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
-    text::{Line, Span},
-    widgets::{Block, BorderType, Borders, List, ListItem, ListState, Paragraph},
+    text::{Line, Span, Text},
+    widgets::{Block, BorderType, Borders, Clear, List, ListItem, ListState, Paragraph},
 };
 use ratatui_textarea::TextArea;
 use rayon::prelude::*;
@@ -19,6 +19,7 @@ struct App {
     running: bool,
     query: String,
     results: Vec<Result>,
+    popup: bool,
 }
 
 struct Result {
@@ -35,6 +36,7 @@ impl App {
             running: true,
             query: "".to_string(),
             results: Vec::new(),
+            popup: false,
         }
     }
 
@@ -176,13 +178,35 @@ impl App {
         .highlight_symbol("▌")
         .highlight_style(Style::new().fg(Color::Rgb(203, 166, 247)));
         frame.render_stateful_widget(list, master_layout[1], &mut self.state);
+
+        // MARK: lens list popup
+        if self.popup {
+            let lens_names: Vec<String> = lenses.iter().map(|l| l.name()).collect();
+            let lens_lines: Vec<Line> = lens_names.par_iter().map(|n| Line::from(Span::styled(n.to_owned() + "#", Style::default().fg(Color::Yellow)))).collect();
+
+            let popup_area = frame.area().centered(
+                Constraint::Percentage(50),
+                Constraint::Percentage(70),
+            );
+            frame.render_widget(Clear, popup_area);
+            frame.render_widget(
+                Paragraph::new(Text::from(lens_lines)).block(
+                    Block::default()
+                        .title_top(Line::from(" Available lenses "))
+                        .borders(Borders::ALL)
+                        .border_style(Style::default().fg(Color::Rgb(203, 166, 247)))
+                        .border_type(BorderType::Rounded)
+                ),
+                popup_area
+            );
+        }
     }
 
     fn keybinds(&mut self, textarea: &mut TextArea) -> std::io::Result<()> {
         match event::read()? {
             Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
                 match key_event.code {
-                    KeyCode::Esc => self.running = false,
+                    KeyCode::Esc if !self.popup => self.running = false,
                     KeyCode::Up => self.state.select_previous(),
                     KeyCode::Down => self.state.select_next(),
                     KeyCode::Enter => {
@@ -193,6 +217,8 @@ impl App {
                             self.running = false;
                         }
                     }
+                    KeyCode::Char('?') => self.popup = true,
+                    KeyCode::Esc if self.popup => self.popup = false,
                     _ => {
                         textarea.input(key_event);
                     }
