@@ -5,12 +5,5 @@
     "state": 0,
     "id": 5,
     "project": "files"
-  },
-  {
-    "name": "Add a ? keybind to show installed lenses",
-    "prio": 2,
-    "state": 0,
-    "id": 0,
-    "project": "tui"
   }
 ]
