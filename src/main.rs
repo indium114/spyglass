@@ -209,7 +209,7 @@ impl App {
                     Block::default()
                         .title_top(Line::from(" Available lenses ").left_aligned())
                         .title_top(Line::from(
-                            " spyglass Version ".to_string() + env!("CARGO_PKG_VERSION") + " ",
+                            " v".to_string() + env!("CARGO_PKG_VERSION") + " ",
                         ).right_aligned())
                         .borders(Borders::ALL)
                         .border_style(Style::default().fg(Color::Rgb(203, 166, 247)))
