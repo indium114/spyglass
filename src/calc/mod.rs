@@ -1,6 +1,6 @@
 use exp_rs::interp;
-use std::process::{Command, Stdio};
 use std::io::Write;
+use std::process::{Command, Stdio};
 
 use crate::{Entry, Lens};
 
