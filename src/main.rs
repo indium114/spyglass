@@ -58,7 +58,10 @@ impl App {
         }
 
         thread::sleep(Duration::from_millis(80));
-        while ratatui::crossterm::terminal::size().map(|(w, h)| w == 0 || h == 0).unwrap_or(true) {
+        while ratatui::crossterm::terminal::size()
+            .map(|(w, h)| w == 0 || h == 0)
+            .unwrap_or(true)
+        {
             thread::sleep(Duration::from_millis(10));
         }
 
@@ -187,22 +190,32 @@ impl App {
         // MARK: lens list popup
         if self.popup {
             let lens_names: Vec<String> = lenses.iter().map(|l| l.name()).collect();
-            let lens_lines: Vec<Line> = lens_names.par_iter().map(|n| Line::from(Span::styled(n.to_owned() + "#", Style::default().fg(Color::Yellow)))).collect();
+            let lens_lines: Vec<Line> = lens_names
+                .par_iter()
+                .map(|n| {
+                    Line::from(Span::styled(
+                        n.to_owned() + "#",
+                        Style::default().fg(Color::Yellow),
+                    ))
+                })
+                .collect();
 
-            let popup_area = frame.area().centered(
-                Constraint::Percentage(50),
-                Constraint::Percentage(70),
-            );
+            let popup_area = frame
+                .area()
+                .centered(Constraint::Percentage(50), Constraint::Percentage(70));
             frame.render_widget(Clear, popup_area);
             frame.render_widget(
                 Paragraph::new(Text::from(lens_lines)).block(
                     Block::default()
-                        .title_top(Line::from(" Available lenses "))
+                        .title_top(Line::from(" Available lenses ").left_aligned())
+                        .title_top(Line::from(
+                            " spyglass Version ".to_string() + env!("CARGO_PKG_VERSION") + " ",
+                        ).right_aligned())
                         .borders(Borders::ALL)
                         .border_style(Style::default().fg(Color::Rgb(203, 166, 247)))
-                        .border_type(BorderType::Rounded)
+                        .border_type(BorderType::Rounded),
                 ),
-                popup_area
+                popup_area,
             );
         }
     }
