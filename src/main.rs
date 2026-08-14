@@ -9,7 +9,7 @@ use ratatui::{
 use ratatui_textarea::TextArea;
 use rayon::prelude::*;
 use spyglass::{
-    Entry, Lens, apps::Apps, clipboard::Clipboard, nerdfont::NerdFont, power::Power,
+    Entry, Lens, apps::Apps, calc::Calc, clipboard::Clipboard, nerdfont::NerdFont, power::Power,
     process::Procs, web::Web,
 };
 use std::{thread, time::Duration};
@@ -47,6 +47,7 @@ impl App {
             Box::new(Apps),
             Box::new(Power),
             Box::new(NerdFont::new()),
+            Box::new(Calc),
             Box::new(Clipboard),
             Box::new(Procs),
             Box::new(Web),
