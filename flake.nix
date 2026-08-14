@@ -41,6 +41,8 @@
         packages.spyglass = naersk'.buildPackage {
           src = ./.;
 
+          SKIP_FFI_BUILD = true;
+
           nativeBuildInputs = [
             pkgs.makeBinaryWrapper
           ];

@@ -1,4 +1,5 @@
 pub mod apps;
+pub mod calc;
 pub mod clipboard;
 pub mod nerdfont;
 pub mod power;
