@@ -105,6 +105,10 @@ impl App {
             }
         }
 
+        if self.state.selected().is_none() {
+            self.state.select(Some(0));
+        }
+
         // MARK: rendering
         let master_layout = Layout::default()
             .direction(Direction::Vertical)
