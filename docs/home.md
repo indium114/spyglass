@@ -2,5 +2,5 @@
 
 ## Configuring lenses
 
-[apps# lens](lenses/apps.md)
-[web# lens](lenses/web.md)
+- [apps# lens](lenses/apps.md)
+- [web# lens](lenses/web.md)
