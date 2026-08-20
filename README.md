@@ -46,6 +46,7 @@ cargo install --git https://github.com/indium114/spyglass
 - Use `Up/Down` to select results
 - Search a specific lens with `lensname#`
   - e.g. `apps#` for apps
+- Press `?` to see a list of available lenses, as well as the version of spyglass you have installed
 
 ## Documentation
 
