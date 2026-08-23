@@ -114,7 +114,7 @@ impl Lens for NerdFont {
 
     fn search(&self, query: String) -> Vec<Entry> {
         let q = query.to_lowercase();
-        GLYPHS
+        let mut results: Vec<Entry> = GLYPHS
             .iter()
             .filter(|g| q.is_empty() || g.name.contains(&q))
             .take(MAX_RESULTS)
@@ -125,6 +125,9 @@ impl Lens for NerdFont {
                 meta: g.code.clone(),
                 enter: copy,
             })
-            .collect()
+            .collect();
+
+        results.sort_by_key(|e| e.title.clone().to_lowercase());
+        results
     }
 }
