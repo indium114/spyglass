@@ -74,6 +74,7 @@ impl Lens for Apps {
             }
         }
 
+        results.sort_by_key(|e| e.title.clone().to_lowercase());
         results
     }
 }
