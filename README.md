@@ -8,6 +8,10 @@
 
 ## Installation
 
+> [!NOTE]
+> You may be confused as to why your applications don't show in the list. \
+> To add application entries, see [Configuring the apps# lens](docs/lenses/apps.md)
+
 ### with Nix
 
 Simply add the repo to your flake inputs...
