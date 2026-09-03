@@ -31,10 +31,12 @@ impl Lens for Clipboard {
     }
 
     fn search(&self, query: String) -> Vec<Entry> {
-        let output = Command::new("cliphist")
-            .arg("list")
-            .output()
-            .expect("failed to run cliphist");
+        let output = match Command::new("cliphist").arg("list").output() {
+            Ok(o) => o,
+            Err(_) => {
+                return Vec::new();
+            }
+        };
         let lines: Vec<String> = String::from_utf8_lossy(&output.stdout)
             .lines()
             .map(|l| l.split('\t').nth(1).unwrap().to_string())

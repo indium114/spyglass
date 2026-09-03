@@ -208,9 +208,10 @@ impl App {
                 Paragraph::new(Text::from(lens_lines)).block(
                     Block::default()
                         .title_top(Line::from(" Available lenses ").left_aligned())
-                        .title_top(Line::from(
-                            " v".to_string() + env!("CARGO_PKG_VERSION") + " ",
-                        ).right_aligned())
+                        .title_top(
+                            Line::from(" v".to_string() + env!("CARGO_PKG_VERSION") + " ")
+                                .right_aligned(),
+                        )
                         .borders(Borders::ALL)
                         .border_style(Style::default().fg(Color::Rgb(203, 166, 247)))
                         .border_type(BorderType::Rounded),
