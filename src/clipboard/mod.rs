@@ -31,10 +31,7 @@ impl Lens for Clipboard {
     }
 
     fn search(&self, query: String) -> Vec<Entry> {
-        let output = match Command::new("cliphist")
-            .arg("list")
-            .output()
-        {
+        let output = match Command::new("cliphist").arg("list").output() {
             Ok(o) => o,
             Err(_) => {
                 return Vec::new();
