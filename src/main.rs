@@ -173,6 +173,11 @@ impl App {
                         Span::raw(n.entry.icon.clone()),
                         Span::raw(" "),
                         Span::raw(n.entry.title.clone()),
+                        Span::raw(" "),
+                        Span::styled(
+                            n.entry.description.clone(),
+                            Style::default().fg(Color::Rgb(30, 30, 46)),
+                        ),
                     ]))
                 })
                 .collect::<Vec<ListItem>>(),
@@ -233,6 +238,15 @@ impl App {
                             && let Some(result) = self.results.get(i)
                         {
                             (result.entry.enter)(&result.entry);
+                            self.running = false;
+                        }
+                    }
+                    KeyCode::Tab => {
+                        if let Some(i) = self.state.selected()
+                            && let Some(result) = self.results.get(i)
+                            && let Some(alternate) = (result.entry.alternate)
+                        {
+                            alternate(&result.entry);
                             self.running = false;
                         }
                     }

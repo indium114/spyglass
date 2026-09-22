@@ -20,10 +20,14 @@ pub struct Entry {
     pub id: String,
     /// user-facing, 'pretty' title
     pub title: String,
+    /// entry description
+    pub description: String,
     /// single-character icon for the entry
     pub icon: String,
     /// extra info, typically used if `enter()` needs more info
     pub meta: String,
     /// function to run when the user presses _Enter_ on the entry
     pub enter: fn(&Entry),
+    /// alternate function to run when the user presses _Tab_ on the entry
+    pub alternate: Option<fn(&Entry)>,
 }
