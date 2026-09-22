@@ -23,6 +23,10 @@ fn copy(entry: &Entry) {
     let _ = cmd.exec();
 }
 
+fn wipe(_entry: &Entry) {
+   let _ = Command::new("cliphist").arg("wipe").exec();
+}
+
 pub struct Clipboard;
 
 impl Lens for Clipboard {
@@ -51,7 +55,7 @@ impl Lens for Clipboard {
                     icon: "".to_string(),
                     meta: line.clone(),
                     enter: copy,
-                    alternate: None,
+                    alternate: Some(wipe),
                 });
             }
         }
