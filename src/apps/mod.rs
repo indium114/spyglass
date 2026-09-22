@@ -10,6 +10,7 @@ use crate::{Entry, Lens};
 #[derive(Deserialize)]
 struct AppConfig {
     pub name: String,
+    pub description: String,
     pub icon: String,
     pub command: String,
 }
@@ -67,6 +68,7 @@ impl Lens for Apps {
                 results.push(Entry {
                     id: app.name.clone(),
                     title: app.name.clone(),
+                    description: app.description.clone(),
                     icon: app.icon,
                     meta: app.command,
                     enter,

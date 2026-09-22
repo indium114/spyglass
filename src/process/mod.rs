@@ -43,6 +43,7 @@ impl Lens for Procs {
                 entries.push(Entry {
                     id: pid.to_string(),
                     title: pid.to_string() + " " + name,
+                    description: "".to_string(),
                     icon: "".to_string(),
                     meta: pid.to_string(),
                     enter,

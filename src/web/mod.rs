@@ -59,6 +59,7 @@ impl Lens for Web {
             vec![Entry {
                 id: "web_search".to_string(),
                 title: query.clone(),
+                description: "".to_string(),
                 icon: "".to_string(),
                 meta: query.clone(),
                 enter,

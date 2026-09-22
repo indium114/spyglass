@@ -43,6 +43,7 @@ impl Lens for Calc {
             vec![Entry {
                 id: "calc_result".to_string(),
                 title: result.clone(),
+                description: "".to_string(),
                 icon: "".to_string(),
                 meta: result.clone(),
                 enter,

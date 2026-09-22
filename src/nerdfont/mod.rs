@@ -121,6 +121,7 @@ impl Lens for NerdFont {
             .map(|g| Entry {
                 id: g.name.clone(),
                 title: g.name.clone(),
+                description: "".to_string(),
                 icon: g.char.clone(),
                 meta: g.code.clone(),
                 enter: copy,

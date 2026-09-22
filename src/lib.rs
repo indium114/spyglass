@@ -20,6 +20,8 @@ pub struct Entry {
     pub id: String,
     /// user-facing, 'pretty' title
     pub title: String,
+    /// entry description
+    pub description: String,
     /// single-character icon for the entry
     pub icon: String,
     /// extra info, typically used if `enter()` needs more info

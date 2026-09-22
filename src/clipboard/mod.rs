@@ -52,6 +52,7 @@ impl Lens for Clipboard {
                 entries.push(Entry {
                     id: line.clone(),
                     title: truncate(&line),
+                    description: "".to_string(),
                     icon: "".to_string(),
                     meta: line.clone(),
                     enter: copy,
