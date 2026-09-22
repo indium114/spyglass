@@ -51,6 +51,7 @@ impl Lens for Clipboard {
                     icon: "".to_string(),
                     meta: line.clone(),
                     enter: copy,
+                    alternate: None,
                 });
             }
         }

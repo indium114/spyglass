@@ -26,4 +26,6 @@ pub struct Entry {
     pub meta: String,
     /// function to run when the user presses _Enter_ on the entry
     pub enter: fn(&Entry),
+    /// alternate function to run when the user presses _Tab_ on the entry
+    pub alternate: Option<fn(&Entry)>,
 }

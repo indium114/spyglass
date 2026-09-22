@@ -46,6 +46,7 @@ impl Lens for Calc {
                 icon: "".to_string(),
                 meta: result.clone(),
                 enter,
+                alternate: None,
             }]
         } else {
             Vec::new()

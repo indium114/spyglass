@@ -37,6 +37,7 @@ impl Lens for Power {
                 icon: "⏻".to_string(),
                 meta: "poweroff".to_string(),
                 enter,
+                alternate: None,
             },
             Entry {
                 id: "reboot".to_string(),
@@ -44,6 +45,7 @@ impl Lens for Power {
                 icon: "".to_string(),
                 meta: "reboot".to_string(),
                 enter,
+                alternate: None,
             },
             Entry {
                 id: "suspend".to_string(),
@@ -51,6 +53,7 @@ impl Lens for Power {
                 icon: "⏾".to_string(),
                 meta: "suspend".to_string(),
                 enter,
+                alternate: None,
             },
         ];
 

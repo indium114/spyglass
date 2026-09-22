@@ -62,6 +62,7 @@ impl Lens for Web {
                 icon: "".to_string(),
                 meta: query.clone(),
                 enter,
+                alternate: None,
             }]
         } else {
             Vec::new()

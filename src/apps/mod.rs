@@ -70,6 +70,7 @@ impl Lens for Apps {
                     icon: app.icon,
                     meta: app.command,
                     enter,
+                    alternate: None,
                 });
             }
         }

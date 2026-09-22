@@ -236,6 +236,15 @@ impl App {
                             self.running = false;
                         }
                     }
+                    KeyCode::Tab => {
+                        if let Some(i) = self.state.selected()
+                            && let Some(result) = self.results.get(i)
+                            && let Some(alternate) = (result.entry.alternate)
+                        {
+                            alternate(&result.entry);
+                            self.running = false;
+                        }
+                    }
                     KeyCode::Char('?') => self.popup = true,
                     KeyCode::Esc if self.popup => self.popup = false,
                     _ => {

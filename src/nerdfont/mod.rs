@@ -124,6 +124,7 @@ impl Lens for NerdFont {
                 icon: g.char.clone(),
                 meta: g.code.clone(),
                 enter: copy,
+                alternate: None,
             })
             .collect();
 

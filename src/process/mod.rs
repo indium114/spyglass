@@ -46,6 +46,7 @@ impl Lens for Procs {
                     icon: "".to_string(),
                     meta: pid.to_string(),
                     enter,
+                    alternate: None,
                 });
             }
         }
