@@ -24,7 +24,7 @@ fn copy(entry: &Entry) {
 }
 
 fn wipe(_entry: &Entry) {
-   let _ = Command::new("cliphist").arg("wipe").exec();
+    let _ = Command::new("cliphist").arg("wipe").exec();
 }
 
 pub struct Clipboard;

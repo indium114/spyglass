@@ -177,7 +177,7 @@ impl App {
                         Span::styled(
                             n.entry.description.clone(),
                             Style::default().fg(Color::Rgb(30, 30, 46)),
-                        )
+                        ),
                     ]))
                 })
                 .collect::<Vec<ListItem>>(),
