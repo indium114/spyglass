@@ -254,6 +254,7 @@ impl App {
                     KeyCode::Esc if self.popup => self.popup = false,
                     _ => {
                         textarea.input(key_event);
+                        self.state.select(Some(0));
                     }
                 }
             }
