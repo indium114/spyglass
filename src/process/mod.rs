@@ -8,7 +8,7 @@ static PROCESSES: LazyLock<HashMap<Pid, String>> = LazyLock::new(load_procs);
 fn load_procs() -> HashMap<Pid, String> {
     let mut system = System::new_with_specifics(
         RefreshKind::nothing().with_processes(ProcessRefreshKind::everything()),
-    );
+    ).expect("Your OS does not support sysinfo's process API");
     system.refresh_all();
 
     let mut procs: HashMap<Pid, String> = HashMap::new();
@@ -21,7 +21,7 @@ fn load_procs() -> HashMap<Pid, String> {
 }
 
 fn enter(entry: &Entry) {
-    let mut sys = System::new();
+    let mut sys = System::new().expect("Your OS does not support sysinfo's process API");
     sys.refresh_all();
 
     if let Some(proc) = sys.process(Pid::from_u32(entry.meta.parse::<u32>().unwrap())) {
