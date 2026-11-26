@@ -7,6 +7,24 @@ license = "MIT"
 repository = "https://github.com/indium114/spyglass"
 homepage = "https://github.com/indium114/spyglass"
 
+[features]
+default = [
+  "apps",
+  "calc",
+  "clipboard",
+  "nerdfont",
+  "power",
+  "process",
+  "web",
+]
+apps = []
+calc = []
+clipboard = []
+nerdfont = []
+power = []
+process = []
+web = []
+
 [dependencies]
 color-eyre = "0.6.5"
 dirs = "7.0.0"
