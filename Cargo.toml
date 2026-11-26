@@ -12,7 +12,7 @@ default = [
   "apps",
   "calc",
   "clipboard",
-  "nerdfont",
+  "nerdfont", # TODO
   "power",
   "process",
   "web",
