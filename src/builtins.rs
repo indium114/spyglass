@@ -244,6 +244,12 @@ local loadConfig = function()
   return spyglass.toml(content)
 end
 
+local urlEncode = function(s)
+  return (s:gsub("([^A-Za-z0-9%-._~])", function(c)
+    return string.format("%%%02X", string.byte(c))
+  end))
+end
+
 return {
   name = "web",
   search = function(query)
@@ -253,7 +259,7 @@ return {
       description = "",
       icon = "",
       meta = "",
-      enter = "xdg-open " .. loadConfig().url:gsub("%s", query),
+      enter = "xdg-open " .. loadConfig().url:gsub("%s", urlEncode(query)),
       alternate = "",
     }}
   end,
