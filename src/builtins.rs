@@ -143,6 +143,122 @@ return {
   end,
 }
         "#.to_string(),
+        #[cfg(feature = "power")]
+        r#"
+return {
+  name = "power",
+  search = function(query)
+    local results = {
+      {
+        id = "poweroff",
+        title = "Shutdown",
+        description = "",
+        icon = "⏻",
+        meta = "",
+        enter = "systemctl poweroff",
+        alternate = "",
+      },
+      {
+        id = "reboot",
+        title = "Reboot",
+        description = "",
+        icon = "",
+        meta = "",
+        enter = "systemctl reboot",
+        alternate = "",
+      },
+      {
+        id = "suspend",
+        title = "Suspend",
+        description = "",
+        icon = "⏾",
+        meta = "",
+        enter = "systemctl suspend",
+        alternate = "",
+      },
+    }
+
+    local finalResults = {}
+
+    for _, e in ipairs(results) do
+      if e.title and e.title:lower():find(query:lower(), 1, true) then
+        table.insert(finalResults, entry)
+      end
+    end
+
+    return finalResults
+  end,
+}
+        "#.to_string(),
+        #[cfg(feature = "process")]
+        r#"
+local listProcesses = function()
+  local pipe = assert(io.popen("ps -e -o pid= -o comm=", "r"))
+  local processes = {}
+
+  for line in pipe:lines() do
+      local pid, name = line:match("^%s*(%d+)%s+(.+)$")
+      if pid and name then
+          processes[#processes + 1] = {
+              pid = pid,
+              name = name,
+          }
+      end
+  end
+
+  pipe:close()
+  return processes
+end
+
+return {
+  name = "process",
+  search = function(query)
+    local results = {}
+
+    for _, process in ipairs(listProcesses()) do
+      if process.name and process.name:lower():find(query:lower(), 1, true) then
+        table.insert(results, {
+          id = process.pid,
+          title = process.pid .. " " .. process.name,
+          description = "",
+          icon = "",
+          meta = "",
+          enter = "kill " .. process.pid,
+          alternate = "",
+        })
+      end
+    end
+
+    return results
+  end
+}
+        "#.to_string(),
+        #[cfg(feature = "web")]
+        r#"
+local loadConfig = function()
+  local path = os.getenv("HOME") .. "/.config/spyglass/web/config.toml"
+  local file = assert(io.open(path, "rb"))
+  local content = file:read("*a")
+  file:close()
+
+  return spyglass.toml(content)
+end
+
+return {
+  name = "web",
+  search = function(query)
+    return {{
+      id = "web",
+      title = query,
+      description = "",
+      icon = "",
+      meta = "",
+      enter = "xdg-open " .. loadConfig().url:gsub("%s", query),
+      alternate = "",
+    }}
+  end,
+}
+        "#.to_string(),
 ];
 
     let mut lenses: Vec<Lens> = Vec::new();
