@@ -5,10 +5,10 @@ pub fn primitives(state: &mut Lua) {
     let spyglass_table = state.create_table().unwrap();
 
     let toml_parser = state.create_function(|lua, input: String| {
-        let value = toml::Value::from_str(&input)
-            .map_err(mlua::Error::external).unwrap();
+        let table = toml::Table::from_str(&input)
+            .map_err(mlua::Error::external)?;
 
-        lua.to_value(&value)
+        lua.to_value(&table)
     }).unwrap();
     let dir_files = state.create_function(|lua, dir: String| {
         let entries = fs::read_dir(&dir).map_err(mlua::Error::external).unwrap();
