@@ -12,7 +12,7 @@ use spyglass::{
     Entry,
     Lens,
 };
-use std::{thread, time::Duration};
+use std::{thread, time::Duration, process::{Command, Stdio}};
 use mlua::{Lua, LuaSerdeExt, Value};
 
 fn home() -> String {
@@ -243,7 +243,13 @@ impl App {
                         if let Some(i) = self.state.selected()
                             && let Some(result) = self.results.get(i)
                         {
-                            println!("{}", result.entry.enter);
+                            let mut cmd = Command::new("sh");
+                            cmd.arg("-c")
+                                .arg(result.entry.enter.clone())
+                                .stdin(Stdio::null())
+                                .stdout(Stdio::null())
+                                .stderr(Stdio::null());
+                            let _ = cmd.spawn();
                             self.running = false;
                         }
                     }
@@ -252,7 +258,13 @@ impl App {
                             && let Some(result) = self.results.get(i)
                             && let Some(alternate) = &(result.entry.alternate)
                         {
-                            println!("{alternate}");
+                            let mut cmd = Command::new("sh");
+                            cmd.arg("-c")
+                                .arg(alternate)
+                                .stdin(Stdio::null())
+                                .stdout(Stdio::null())
+                                .stderr(Stdio::null());
+                            let _ = cmd.spawn();
                             self.running = false;
                         }
                     }
