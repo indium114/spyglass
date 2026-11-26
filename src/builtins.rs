@@ -1,5 +1,5 @@
 use crate::Lens;
-use mlua::{Table, Lua};
+use mlua::{Lua, Table};
 
 pub fn init(lua: &Lua) -> Vec<Lens> {
     let builtin_lenses: Vec<String> = vec![
@@ -46,7 +46,8 @@ return {
     return results
   end,
 }
-        "#.to_string(),
+        "#
+        .to_string(),
         #[cfg(feature = "calc")]
         r#"
 local eval_number = function(expr)
@@ -97,7 +98,8 @@ return {
     end
   end,
 }
-        "#.to_string(),
+        "#
+        .to_string(),
         #[cfg(feature = "clipboard")]
         r#"
 local cliphist = function()
@@ -142,7 +144,8 @@ return {
     return results
   end,
 }
-        "#.to_string(),
+        "#
+        .to_string(),
         #[cfg(feature = "power")]
         r#"
 return {
@@ -189,7 +192,8 @@ return {
     return finalResults
   end,
 }
-        "#.to_string(),
+        "#
+        .to_string(),
         #[cfg(feature = "process")]
         r#"
 local listProcesses = function()
@@ -232,7 +236,8 @@ return {
     return results
   end
 }
-        "#.to_string(),
+        "#
+        .to_string(),
         #[cfg(feature = "web")]
         r#"
 local loadConfig = function()
@@ -264,17 +269,14 @@ return {
     }}
   end,
 }
-        "#.to_string(),
-];
+        "#
+        .to_string(),
+    ];
 
     let mut lenses: Vec<Lens> = Vec::new();
 
     for i in builtin_lenses {
-        let table: Table = lua
-            .load(i.clone())
-            .set_name(i)
-            .eval()
-            .unwrap();
+        let table: Table = lua.load(i.clone()).set_name(i).eval().unwrap();
 
         lenses.push(Lens {
             name: table.get("name").unwrap(),
