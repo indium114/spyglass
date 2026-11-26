@@ -132,8 +132,8 @@ return {
         table.insert(results, {
           id = i,
           title = e,
-          description = "",
-          icon = "",
+          description = "",
+          icon = "",
           meta = "",
           enter = "wl-copy " .. e,
           alternate = "cliphist wipe",
