@@ -5,5 +5,12 @@
     "state": 0,
     "id": 5,
     "project": "files"
+  },
+  {
+    "name": "build",
+    "prio": 3,
+    "state": 0,
+    "id": 0,
+    "project": "nerdfont"
   }
 ]
