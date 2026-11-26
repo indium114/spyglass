@@ -3,14 +3,16 @@ use mlua::{
     Lua,
     LuaSerdeExt,
     Table
-}
+};
+use std::fs;
+use serde::Deserialize;
 
 pub struct Lens {
-    name: String,
-    search: Function,
+    pub name: String,
+    pub search: Function,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Deserialize)]
 pub struct Entry {
     /// unique internal id for each entry
     pub id: String,
@@ -23,13 +25,13 @@ pub struct Entry {
     /// extra info, typically used if `enter()` needs more info
     pub meta: String,
     /// function to run when the user presses _Enter_ on the entry
-    pub enter: fn(&Entry),
+    pub enter: String,
     /// alternate function to run when the user presses _Tab_ on the entry
-    pub alternate: Option<fn(&Entry)>,
+    pub alternate: Option<String>,
 }
 
 pub fn load_lenses(lua: &Lua, dir: &str) -> Vec<Lens> {
-    let mut lenses: Vec<Lens = Vec::new();
+    let mut lenses: Vec<Lens> = Vec::new();
 
     for item in fs::read_dir(dir).unwrap() {
         let path = item.unwrap().path();

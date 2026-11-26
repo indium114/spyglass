@@ -13,8 +13,13 @@ use spyglass::{
     Lens,
 };
 use std::{thread, time::Duration};
+use mlua::{Lua, LuaSerdeExt, Value};
 
-mod lens;
+fn home() -> String {
+    let dir = dirs::home_dir();
+    dir.map(|p| p.to_string_lossy().into_owned())
+        .unwrap_or_default()
+}
 
 struct App {
     state: ListState,
@@ -43,10 +48,11 @@ impl App {
     }
 
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> std::io::Result<()> {
+        let lua = Lua::new();
+
         // MARK: lenses
-        // NOTE: add lenses to vector below VVVVVV
-        let lenses: Vec<Box<dyn Lens>> = vec![
-        ];
+        let path = home() + "/.config/spyglass/lenses/";
+        let lenses: Vec<Lens> = spyglass::load_lenses(&lua, &path);
 
         if self.state.selected().is_none() {
             self.state.select(Some(0));
@@ -63,18 +69,18 @@ impl App {
         let mut textarea = TextArea::default();
         while self.running {
             terminal.draw(|frame| {
-                self.render(frame, &mut textarea, &lenses);
+                self.render(frame, &mut textarea, &lenses, &lua);
             })?;
             self.keybinds(&mut textarea)?;
             terminal.draw(|frame| {
-                self.render(frame, &mut textarea, &lenses);
+                self.render(frame, &mut textarea, &lenses, &lua);
             })?;
         }
 
         Ok(())
     }
 
-    fn render(&mut self, frame: &mut Frame, textarea: &mut TextArea, lenses: &Vec<Box<dyn Lens>>) {
+    fn render(&mut self, frame: &mut Frame, textarea: &mut TextArea, lenses: &Vec<Lens>, lua: &Lua) {
         // MARK: searching
         self.results = Vec::new();
         if self.query.contains('#') {
@@ -83,10 +89,12 @@ impl App {
             let query = split[1].trim().to_string();
 
             for lens in lenses {
-                if lens.name() == lens_filter {
-                    for entry in lens.search(query.clone()) {
+                if lens.name == lens_filter {
+                    let value: Value = lens.search.call(query.clone()).unwrap();
+                    let entries: Vec<Entry> = lua.from_value(value).unwrap();
+                    for entry in entries {
                         self.results.push(Result {
-                            lens_name: lens.name(),
+                            lens_name: lens.name.clone(),
                             entry,
                         });
                     }
@@ -94,9 +102,12 @@ impl App {
             }
         } else {
             for lens in lenses {
-                for entry in lens.search(self.query.trim().to_string()) {
+                let value: Value = lens.search.call(self.query.clone()).unwrap();
+                let entries: Vec<Entry> = lua.from_value(value).unwrap();
+
+                for entry in entries{
                     self.results.push(Result {
-                        lens_name: lens.name(),
+                        lens_name: lens.name.clone(),
                         entry,
                     });
                 }
@@ -189,7 +200,7 @@ impl App {
 
         // MARK: lens list popup
         if self.popup {
-            let lens_names: Vec<String> = lenses.iter().map(|l| l.name()).collect();
+            let lens_names: Vec<String> = lenses.iter().map(|l| l.name.clone()).collect();
             let lens_lines: Vec<Line> = lens_names
                 .par_iter()
                 .map(|n| {
@@ -232,16 +243,16 @@ impl App {
                         if let Some(i) = self.state.selected()
                             && let Some(result) = self.results.get(i)
                         {
-                            (result.entry.enter)(&result.entry);
+                            println!("{}", result.entry.enter);
                             self.running = false;
                         }
                     }
                     KeyCode::Tab => {
                         if let Some(i) = self.state.selected()
                             && let Some(result) = self.results.get(i)
-                            && let Some(alternate) = (result.entry.alternate)
+                            && let Some(alternate) = &(result.entry.alternate)
                         {
-                            alternate(&result.entry);
+                            println!("{alternate}");
                             self.running = false;
                         }
                     }
