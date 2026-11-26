@@ -5,7 +5,7 @@ pub fn init(lua: &Lua) -> Vec<Lens> {
     let builtin_lenses: Vec<String> = vec![
         #[cfg(feature = "apps")]
         r#"
-local function loadConfigs()
+local loadConfigs = function()
   local dir = os.getenv("HOME") .. "/.config/spyglass/applications"
   local entries = spyglass.files(dir)
   local configs = {}
@@ -44,6 +44,57 @@ return {
     end
 
     return results
+  end,
+}
+        "#.to_string(),
+        #[cfg(feature = "calc")]
+        r#"
+local eval_number = function(expr)
+  local env = {
+    sqrt = math.sqrt,
+    cbrt = function(x)
+      return x < 0 and -((-x) ^ (1 / 3)) or x ^ (1 / 3)
+    end
+  }
+  local chunk = load("return " .. expr, "expression", "t", env)
+  if not chunk then
+      return "NaN"
+  end
+
+  local ok, result = pcall(chunk)
+  if not ok or type(result) ~= "number" then
+      return "NaN"
+  end
+
+  return result
+end
+
+return {
+  name = "calc",
+  search = function(query)
+    local result, err = eval_number(query)
+    result = tostring(result)
+    if result then
+      return {{
+        id = result or "",
+        title = tostring(result) or "",
+        description = "",
+        icon = "",
+        meta = result,
+        enter = "wl-copy " .. result,
+        alternate = "",
+      }}
+    else
+      return {{
+        id = "err",
+        title = tostring(err) or "",
+        description = "Error during calculation",
+        icon = "",
+        meta = err or "",
+        enter = "",
+        alternate = "",
+      }}
+    end
   end,
 }
         "#.to_string(),
