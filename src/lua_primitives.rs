@@ -15,10 +15,12 @@ pub fn primitives(state: &mut Lua) {
 
         let mut files = Vec::new();
         for entry in entries {
-            let entry = entry.map_err(mlua::Error::external).unwrap();
-            let file_type = entry.file_type().map_err(mlua::Error::external).unwrap();
-            if file_type.is_file() {
-                files.push(entry.path().to_string_lossy().into_owned());
+            let entry = entry.unwrap();
+            let path = entry.path();
+            let kind = entry.file_type();
+
+            if kind.as_ref().unwrap().is_file() || (kind.unwrap().is_symlink() && fs::metadata(&path).unwrap().is_file()) {
+                files.push(path);
             }
         }
 
