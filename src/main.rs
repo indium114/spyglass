@@ -16,6 +16,8 @@ use std::{
     time::Duration,
 };
 
+mod lua_primitives;
+
 fn home() -> String {
     let dir = dirs::home_dir();
     dir.map(|p| p.to_string_lossy().into_owned())
@@ -49,7 +51,8 @@ impl App {
     }
 
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> std::io::Result<()> {
-        let lua = Lua::new();
+        let mut lua = Lua::new();
+        lua_primitives::primitives(&mut lua);
 
         // MARK: lenses
         let path = home() + "/.config/spyglass/lenses/";
