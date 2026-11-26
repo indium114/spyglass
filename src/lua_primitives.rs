@@ -1,5 +1,5 @@
 use mlua::{Lua, LuaSerdeExt};
-use std::str::FromStr;
+use std::{str::FromStr, fs};
 
 pub fn primitives(state: &mut Lua) {
     let spyglass_table = state.create_table().unwrap();
@@ -10,8 +10,23 @@ pub fn primitives(state: &mut Lua) {
 
         lua.to_value(&value)
     }).unwrap();
+    let dir_files = state.create_function(|lua, dir: String| {
+        let entries = fs::read_dir(&dir).map_err(mlua::Error::external).unwrap();
+
+        let mut files = Vec::new();
+        for entry in entries {
+            let entry = entry.map_err(mlua::Error::external).unwrap();
+            let file_type = entry.file_type().map_err(mlua::Error::external).unwrap();
+            if file_type.is_file() {
+                files.push(entry.path().to_string_lossy().into_owned());
+            }
+        }
+
+        lua.create_sequence_from(files)
+    }).unwrap();
 
     spyglass_table.set("toml", toml_parser).unwrap();
+    spyglass_table.set("files", dir_files).unwrap();
 
     state.globals().set("spyglass", spyglass_table).unwrap();
 }
