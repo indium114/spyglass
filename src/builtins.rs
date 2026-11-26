@@ -181,15 +181,7 @@ return {
       },
     }
 
-    local finalResults = {}
-
-    for _, e in ipairs(results) do
-      if e.title and e.title:lower():find(query:lower(), 1, true) then
-        table.insert(finalResults, entry)
-      end
-    end
-
-    return finalResults
+    return results
   end,
 }
         "#
