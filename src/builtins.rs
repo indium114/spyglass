@@ -265,7 +265,7 @@ return {
 
     for i in builtin_lenses {
         let table: Table = lua
-            .load(&i.clone())
+            .load(i.clone())
             .set_name(i)
             .eval()
             .unwrap();

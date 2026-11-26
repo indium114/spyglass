@@ -29,10 +29,10 @@ pub struct Entry {
 
 pub fn load_lenses(lua: &Lua, dir: &str) -> Vec<Lens> {
     let mut lenses: Vec<Lens> = Vec::new();
-    lenses.extend(builtins::init(&lua));
+    lenses.extend(builtins::init(lua));
 
     if std::path::Path::new(dir).is_dir() {
-        for item in fs::read_dir(dir).expect(&format!("{dir} does not exist")) {
+        for item in fs::read_dir(dir).unwrap_or_else(|_| panic!("{dir} does not exist")) {
             let path = item.unwrap().path();
             if path.extension().and_then(|e| e.to_str()) != Some("lua") {
                 continue;
