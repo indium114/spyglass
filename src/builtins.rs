@@ -98,6 +98,51 @@ return {
   end,
 }
         "#.to_string(),
+        #[cfg(feature = "clipboard")]
+        r#"
+local cliphist = function()
+  local pipe = assert(io.popen("cliphist list", "r"))
+  local lines_raw = {}
+
+  for line in pipe:lines() do
+    lines_raw[#lines_raw + 1] = line
+  end
+
+  local lines = {}
+  for _, line in ipairs(lines_raw) do
+      local key, value = line:match("^%s*(%S+)%s+(.+)%s*$")
+      if key and value then
+          lines[key] = value
+      end
+  end
+
+  pipe:close()
+  return lines
+end
+
+return {
+  name = "clipboard",
+  search = function(query)
+    local results = {}
+
+    for i, e in pairs(cliphist()) do
+      if e and e:lower():find(query:lower(), 1, true) then
+        table.insert(results, {
+          id = i,
+          title = e,
+          description = "",
+          icon = "",
+          meta = "",
+          enter = "wl-copy " .. e,
+          alternate = "cliphist wipe",
+        })
+      end
+    end
+
+    return results
+  end,
+}
+        "#.to_string(),
 ];
 
     let mut lenses: Vec<Lens> = Vec::new();
