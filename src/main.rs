@@ -9,8 +9,8 @@ use ratatui::{
 use ratatui_textarea::TextArea;
 use rayon::prelude::*;
 use spyglass::{
-    Entry, Lens, apps::Apps, calc::Calc, clipboard::Clipboard, nerdfont::NerdFont, power::Power,
-    process::Procs, web::Web,
+    Entry,
+    Lens,
 };
 use std::{thread, time::Duration};
 
