@@ -44,13 +44,6 @@ impl App {
         // MARK: lenses
         // NOTE: add lenses to vector below VVVVVV
         let lenses: Vec<Box<dyn Lens>> = vec![
-            Box::new(Apps),
-            Box::new(Power),
-            Box::new(NerdFont::new()),
-            Box::new(Calc),
-            Box::new(Clipboard),
-            Box::new(Procs),
-            Box::new(Web),
         ];
 
         if self.state.selected().is_none() {

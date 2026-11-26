@@ -1,11 +1,3 @@
-pub mod apps;
-pub mod calc;
-pub mod clipboard;
-pub mod nerdfont;
-pub mod power;
-pub mod process;
-pub mod web;
-
 pub trait Lens {
     /// returns the lens's name, conventionally all-lowercase
     fn name(&self) -> String;
