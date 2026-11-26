@@ -1,10 +1,6 @@
-use mlua::{
-    Function,
-    Lua,
-    Table
-};
-use std::fs;
+use mlua::{Function, Lua, Table};
 use serde::Deserialize;
+use std::fs;
 
 pub struct Lens {
     pub name: String,
@@ -45,12 +41,10 @@ pub fn load_lenses(lua: &Lua, dir: &str) -> Vec<Lens> {
             .eval()
             .unwrap();
 
-        lenses.push(
-            Lens {
-                name: table.get("name").unwrap(),
-                search: table.get("search").unwrap(),
-            }
-        )
+        lenses.push(Lens {
+            name: table.get("name").unwrap(),
+            search: table.get("search").unwrap(),
+        })
     }
 
     lenses

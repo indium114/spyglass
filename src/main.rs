@@ -1,3 +1,4 @@
+use mlua::{Lua, LuaSerdeExt, Value};
 use ratatui::{
     DefaultTerminal, Frame,
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
@@ -8,12 +9,12 @@ use ratatui::{
 };
 use ratatui_textarea::TextArea;
 use rayon::prelude::*;
-use spyglass::{
-    Entry,
-    Lens,
+use spyglass::{Entry, Lens};
+use std::{
+    process::{Command, Stdio},
+    thread,
+    time::Duration,
 };
-use std::{thread, time::Duration, process::{Command, Stdio}};
-use mlua::{Lua, LuaSerdeExt, Value};
 
 fn home() -> String {
     let dir = dirs::home_dir();
@@ -80,7 +81,13 @@ impl App {
         Ok(())
     }
 
-    fn render(&mut self, frame: &mut Frame, textarea: &mut TextArea, lenses: &Vec<Lens>, lua: &Lua) {
+    fn render(
+        &mut self,
+        frame: &mut Frame,
+        textarea: &mut TextArea,
+        lenses: &Vec<Lens>,
+        lua: &Lua,
+    ) {
         // MARK: searching
         self.results = Vec::new();
         if self.query.contains('#') {
@@ -105,7 +112,7 @@ impl App {
                 let value: Value = lens.search.call(self.query.clone()).unwrap();
                 let entries: Vec<Entry> = lua.from_value(value).unwrap();
 
-                for entry in entries{
+                for entry in entries {
                     self.results.push(Result {
                         lens_name: lens.name.clone(),
                         entry,
