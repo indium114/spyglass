@@ -1,7 +1,6 @@
 use mlua::{
     Function,
     Lua,
-    LuaSerdeExt,
     Table
 };
 use std::fs;
