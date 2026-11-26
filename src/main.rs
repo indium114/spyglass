@@ -14,6 +14,8 @@ use spyglass::{
 };
 use std::{thread, time::Duration};
 
+mod lens;
+
 struct App {
     state: ListState,
     running: bool,
