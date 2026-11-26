@@ -10,6 +10,11 @@ pub fn primitives(state: &mut Lua) {
 
         lua.to_value(&table)
     }).unwrap();
+    let json_parser = state.create_function(|lua, input: String| {
+        let value: serde_json::Value = serde_json::from_str(&input).map_err(mlua::Error::external)?;
+
+        lua.to_value(&value)
+    }).unwrap();
     let dir_files = state.create_function(|lua, dir: String| {
         let entries = fs::read_dir(&dir).map_err(mlua::Error::external).unwrap();
 
@@ -28,6 +33,7 @@ pub fn primitives(state: &mut Lua) {
     }).unwrap();
 
     spyglass_table.set("toml", toml_parser).unwrap();
+    spyglass_table.set("json", json_parser).unwrap();
     spyglass_table.set("files", dir_files).unwrap();
 
     state.globals().set("spyglass", spyglass_table).unwrap();
