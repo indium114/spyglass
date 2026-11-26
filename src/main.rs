@@ -11,10 +11,10 @@ use ratatui_textarea::TextArea;
 use rayon::prelude::*;
 use spyglass::{Entry, Lens};
 use std::{
+    os::unix::process::CommandExt,
     process::{Command, Stdio},
     thread,
     time::Duration,
-    os::unix::process::CommandExt,
 };
 
 mod lua_primitives;
