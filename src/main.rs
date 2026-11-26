@@ -14,6 +14,7 @@ use std::{
     process::{Command, Stdio},
     thread,
     time::Duration,
+    os::unix::process::CommandExt,
 };
 
 mod lua_primitives;
@@ -258,7 +259,8 @@ impl App {
                                 .arg(result.entry.enter.clone())
                                 .stdin(Stdio::null())
                                 .stdout(Stdio::null())
-                                .stderr(Stdio::null());
+                                .stderr(Stdio::null())
+                                .process_group(0);
                             let _ = cmd.spawn();
                             self.running = false;
                         }
@@ -273,7 +275,8 @@ impl App {
                                 .arg(alternate)
                                 .stdin(Stdio::null())
                                 .stdout(Stdio::null())
-                                .stderr(Stdio::null());
+                                .stderr(Stdio::null())
+                                .process_group(0);
                             let _ = cmd.spawn();
                             self.running = false;
                         }
