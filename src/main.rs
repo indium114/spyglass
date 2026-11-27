@@ -16,7 +16,10 @@ use std::{
     process::{Command, Stdio},
     thread,
     time::Duration,
+    str::FromStr,
+    fs,
 };
+use serde::Deserialize;
 
 use crate::image_loader::ImageLoader;
 
@@ -36,6 +39,7 @@ struct App {
     results: Vec<Result>,
     image_loader: ImageLoader,
     popup: bool,
+    config: Config,
 }
 
 struct Result {
@@ -43,8 +47,24 @@ struct Result {
     entry: Entry,
 }
 
+#[derive(Clone, Deserialize)]
+struct Config {
+    pub search_icon_colour: String,
+    pub search_box_border_colour: String,
+    pub list_border_colour: String,
+    pub list_highlight_colour: String,
+    pub list_description_deselected_colour: String,
+    pub lens_colour: String,
+    pub image_workers: Option<usize>,
+}
+
 impl App {
     pub fn new() -> Self {
+        // MARK: load config
+        let config_path = home() + "/.config/spyglass/globalconfig.toml";
+        let contents = fs::read_to_string(config_path).expect("~/.config/spyglass/globalconfig.toml does not exist");
+        let config: Config = toml::from_str(&contents).expect("~/.config/spyglass/globalconfig.toml is not valid toml");
+
         // decide image protocol based on terminal capabilities
         let picker = Picker::from_query_stdio().unwrap_or_else(|_| Picker::halfblocks());
         let mut list_state = ListState::default();
@@ -53,10 +73,10 @@ impl App {
             state: list_state,
             running: true,
             query: "".to_string(),
-            // TODO: should `workers` be configurable?
-            image_loader: ImageLoader::new(picker, 8),
+            image_loader: ImageLoader::new(picker, config.image_workers.unwrap_or(8)),
             results: Vec::new(),
             popup: false,
+            config: config.clone(),
         }
     }
 
@@ -160,7 +180,7 @@ impl App {
             Paragraph::new("   ").block(
                 Block::default()
                     .borders(Borders::ALL)
-                    .border_style(Style::default().fg(Color::Rgb(203, 166, 247)))
+                    .border_style(Style::default().fg(Color::from_str(&self.config.search_icon_colour).unwrap()))
                     .border_type(BorderType::Rounded),
             ),
             topbar_layout[0],
@@ -181,7 +201,7 @@ impl App {
                 )
                 .borders(Borders::ALL)
                 .border_type(BorderType::Rounded)
-                .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
+                .border_style(Style::new().fg(Color::from_str(&self.config.search_box_border_colour).unwrap())),
         );
         textarea.set_placeholder_text("Search...");
         self.query = textarea
@@ -206,7 +226,7 @@ impl App {
                     ListItem::new(Line::from(vec![
                         Span::styled(
                             n.lens_name.clone() + "#",
-                            Style::default().fg(Color::Yellow),
+                            Style::default().fg(Color::from_str(&self.config.lens_colour).unwrap()),
                         ),
                         Span::raw(" "),
                         icon_span,
@@ -215,7 +235,7 @@ impl App {
                         Span::raw(" "),
                         Span::styled(
                             " | ".to_string() + &n.entry.description.clone(),
-                            Style::default().fg(Color::Rgb(30, 30, 46)),
+                            Style::default().fg(Color::from_str(&self.config.list_description_deselected_colour).unwrap()),
                         ),
                     ]))
                 })
@@ -224,11 +244,11 @@ impl App {
         .block(
             Block::default()
                 .borders(Borders::ALL)
-                .border_style(Style::new().fg(Color::Rgb(203, 166, 247)))
+                .border_style(Style::new().fg(Color::from_str(&self.config.list_border_colour).unwrap()))
                 .border_type(BorderType::Rounded),
         )
         .highlight_symbol("▌")
-        .highlight_style(Style::new().fg(Color::Rgb(203, 166, 247)));
+        .highlight_style(Style::new().fg(Color::from_str(&self.config.list_highlight_colour).unwrap()));
         frame.render_stateful_widget(list, master_layout[1], &mut self.state);
 
         // receive all loaded images from loading thread
@@ -275,7 +295,7 @@ impl App {
                                 .right_aligned(),
                         )
                         .borders(Borders::ALL)
-                        .border_style(Style::default().fg(Color::Rgb(203, 166, 247)))
+                        .border_style(Style::default().fg(Color::from_str(&"#cba6f7").unwrap()))
                         .border_type(BorderType::Rounded),
                 ),
                 popup_area,
