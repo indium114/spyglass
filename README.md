@@ -7,6 +7,9 @@
 ## Installation
 
 > [!NOTE]
+> configure your theme and image workers in `~/.config/spyglass/globalconfig.toml` before launching for the first time
+
+> [!NOTE]
 > You may be confused as to why your applications don't show in the list. \
 > To add application entries, see [Configuring the apps# lens](docs/lenses/apps.md)
 
