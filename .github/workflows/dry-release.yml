@@ -20,13 +20,9 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
       - name: Set up Zig (needed for Goreleaser)
         uses: mlugg/setup-zig@v2
-      - name: Add crossbuild deps
+      - name: Add deps
         run: |
-          sudo dpkg --add-architecture arm64
-          sudo apt update
-          sudo apt install crossbuild-essential-arm64
           sudo apt install libchafa-dev:amd64 libglib2.0-dev:amd64
-          sudo apt install libchafa-dev:arm64 libglib2.0-dev:arm64
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v7
         with:
