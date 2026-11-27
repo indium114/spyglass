@@ -36,6 +36,7 @@ return {
           title = name,
           description = config.description or "",
           icon = config.icon or "",
+          image = config.image or nil,
           meta = config.command or "",
           enter = config.command or "",
           alternate = config.command,
