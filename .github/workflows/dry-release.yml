@@ -1,0 +1,35 @@
+name: Dry-release
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: Set up Zig (needed for Goreleaser)
+        uses: mlugg/setup-zig@v2
+      - name: Add crossbuild deps
+        run: |
+          sudo dpkg --add-architecture arm64
+          sudo apt update
+          sudo apt install crossbuild-essential-arm64
+          sudo apt install libchafa-dev:amd64 libglib2.0-dev:amd64
+          sudo apt install libchafa-dev:arm64 libglib2.0-dev:arm64
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --snapshot --skip=publish --clean
