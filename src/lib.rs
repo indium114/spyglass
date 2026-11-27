@@ -1,6 +1,9 @@
+use image::ImageReader;
 use mlua::{Function, Lua, Table};
+use ratatui::layout::Size;
+use ratatui_image::{Resize, picker::Picker, protocol::Protocol};
 use serde::Deserialize;
-use std::fs;
+use std::{fs, path::PathBuf};
 
 mod builtins;
 
@@ -25,6 +28,8 @@ pub struct Entry {
     pub enter: String,
     /// alternate function to run when the user presses _Tab_ on the entry
     pub alternate: Option<String>,
+    /// path to image
+    pub image: Option<String>,
 }
 
 pub fn load_lenses(lua: &Lua, dir: &str) -> Vec<Lens> {
@@ -53,4 +58,16 @@ pub fn load_lenses(lua: &Lua, dir: &str) -> Vec<Lens> {
     }
 
     lenses
+}
+
+pub fn load_image_protocol(path: &PathBuf, picker: &Picker) -> Option<Protocol> {
+    let reader = ImageReader::open(path).ok()?.with_guessed_format().ok()?;
+    let dyn_img = reader.decode().ok()?;
+    match picker.new_protocol(dyn_img, Size::new(2, 1), Resize::Fit(None)) {
+        Ok(proto) => Some(proto),
+        Err(e) => {
+            eprintln!("Failed to create protocol: {:?}", e);
+            None
+        }
+    }
 }
