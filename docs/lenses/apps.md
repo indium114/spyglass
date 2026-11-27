@@ -7,5 +7,6 @@ To create an application entry, create a `.toml` file named after that entry.
 ```toml
 name = "LibreOffice"                      # The name of the application
 icon = ""                                # Icon, typically from a nerd font, or an emoji
+image = "/path/to/image"                  # Overrides the `icon` option. Optional. Should be an absolute path to an image file
 command = "libreoffice & sleep 5"         # Command to run. Note that the `& sleep 5` is needed because sometimes the terminal will close before the program can be detached, and it won't launch
 ```

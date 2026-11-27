@@ -17,6 +17,8 @@ return {
 }
 ```
 
+If `result.image` exists, Spyglass tries to load an image from the path given, if this fails, or `image` does not exist, it instead falls back what is given in `icon`
+
 To aid in development, a few primitives exist:
 
 - `spyglass.toml(string) -> {}`: parses the input string as toml and returns a table

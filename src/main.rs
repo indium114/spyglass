@@ -2,11 +2,12 @@ use mlua::{Lua, LuaSerdeExt, Value};
 use ratatui::{
     DefaultTerminal, Frame,
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
-    layout::{Constraint, Direction, Layout},
+    layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Style},
     text::{Line, Span, Text},
     widgets::{Block, BorderType, Borders, Clear, List, ListItem, ListState, Paragraph},
 };
+use ratatui_image::picker::Picker;
 use ratatui_textarea::TextArea;
 use rayon::prelude::*;
 use spyglass::{Entry, Lens};
@@ -15,8 +16,14 @@ use std::{
     process::{Command, Stdio},
     thread,
     time::Duration,
+    str::FromStr,
+    fs,
 };
+use serde::Deserialize;
 
+use crate::image_loader::ImageLoader;
+
+mod image_loader;
 mod lua_primitives;
 
 fn home() -> String {
@@ -30,7 +37,9 @@ struct App {
     running: bool,
     query: String,
     results: Vec<Result>,
+    image_loader: ImageLoader,
     popup: bool,
+    config: Config,
 }
 
 struct Result {
@@ -38,16 +47,36 @@ struct Result {
     entry: Entry,
 }
 
+#[derive(Clone, Deserialize)]
+struct Config {
+    pub search_icon_colour: String,
+    pub search_box_border_colour: String,
+    pub list_border_colour: String,
+    pub list_highlight_colour: String,
+    pub list_description_deselected_colour: String,
+    pub lens_colour: String,
+    pub image_workers: Option<usize>,
+}
+
 impl App {
     pub fn new() -> Self {
+        // MARK: load config
+        let config_path = home() + "/.config/spyglass/globalconfig.toml";
+        let contents = fs::read_to_string(config_path).expect("~/.config/spyglass/globalconfig.toml does not exist");
+        let config: Config = toml::from_str(&contents).expect("~/.config/spyglass/globalconfig.toml is not valid toml");
+
+        // decide image protocol based on terminal capabilities
+        let picker = Picker::from_query_stdio().unwrap_or_else(|_| Picker::halfblocks());
         let mut list_state = ListState::default();
         list_state.select(Some(0));
         Self {
             state: list_state,
             running: true,
             query: "".to_string(),
+            image_loader: ImageLoader::new(picker, config.image_workers.unwrap_or(8)),
             results: Vec::new(),
             popup: false,
+            config: config.clone(),
         }
     }
 
@@ -72,14 +101,22 @@ impl App {
         }
 
         let mut textarea = TextArea::default();
+        let mut needs_redraw = true;
         while self.running {
-            terminal.draw(|frame| {
-                self.render(frame, &mut textarea, &lenses, &lua);
-            })?;
-            self.keybinds(&mut textarea)?;
-            terminal.draw(|frame| {
-                self.render(frame, &mut textarea, &lenses, &lua);
-            })?;
+            if self.image_loader.poll() {
+                needs_redraw = true;
+            }
+
+            if needs_redraw {
+                terminal.draw(|frame| {
+                    self.render(frame, &mut textarea, &lenses, &lua);
+                })?;
+                needs_redraw = false;
+            }
+
+            if self.keybinds(&mut textarea)? {
+                needs_redraw = true;
+            }
         }
 
         Ok(())
@@ -143,7 +180,7 @@ impl App {
             Paragraph::new("   ").block(
                 Block::default()
                     .borders(Borders::ALL)
-                    .border_style(Style::default().fg(Color::Rgb(203, 166, 247)))
+                    .border_style(Style::default().fg(Color::from_str(&self.config.search_icon_colour).unwrap()))
                     .border_type(BorderType::Rounded),
             ),
             topbar_layout[0],
@@ -164,7 +201,7 @@ impl App {
                 )
                 .borders(Borders::ALL)
                 .border_type(BorderType::Rounded)
-                .border_style(Style::new().fg(Color::Rgb(203, 166, 247))),
+                .border_style(Style::new().fg(Color::from_str(&self.config.search_box_border_colour).unwrap())),
         );
         textarea.set_placeholder_text("Search...");
         self.query = textarea
@@ -181,19 +218,24 @@ impl App {
             self.results
                 .par_iter()
                 .map(|n| {
+                    let icon_span = if n.entry.image.is_some() {
+                        Span::raw(" ")
+                    } else {
+                        Span::raw(n.entry.icon.clone())
+                    };
                     ListItem::new(Line::from(vec![
                         Span::styled(
                             n.lens_name.clone() + "#",
-                            Style::default().fg(Color::Yellow),
+                            Style::default().fg(Color::from_str(&self.config.lens_colour).unwrap()),
                         ),
                         Span::raw(" "),
-                        Span::raw(n.entry.icon.clone()),
+                        icon_span,
                         Span::raw(" "),
                         Span::raw(n.entry.title.clone()),
                         Span::raw(" "),
                         Span::styled(
                             " | ".to_string() + &n.entry.description.clone(),
-                            Style::default().fg(Color::Rgb(30, 30, 46)),
+                            Style::default().fg(Color::from_str(&self.config.list_description_deselected_colour).unwrap()),
                         ),
                     ]))
                 })
@@ -202,12 +244,30 @@ impl App {
         .block(
             Block::default()
                 .borders(Borders::ALL)
-                .border_style(Style::new().fg(Color::Rgb(203, 166, 247)))
+                .border_style(Style::new().fg(Color::from_str(&self.config.list_border_colour).unwrap()))
                 .border_type(BorderType::Rounded),
         )
         .highlight_symbol("▌")
-        .highlight_style(Style::new().fg(Color::Rgb(203, 166, 247)));
+        .highlight_style(Style::new().fg(Color::from_str(&self.config.list_highlight_colour).unwrap()));
         frame.render_stateful_widget(list, master_layout[1], &mut self.state);
+
+        // receive all loaded images from loading thread
+        // replace all image-containing entries' icon placeholders with images
+        for (row, n) in self
+            .results
+            .iter_mut()
+            .skip(self.state.offset())
+            .take(master_layout[1].height as usize)
+            .enumerate()
+        {
+            if let Some(image_path) = &n.entry.image
+                && let Some(protocol) = self.image_loader.get_or_queue(image_path)
+            {
+                let x = master_layout[1].x + n.lens_name.chars().count() as u16 + 4;
+                let y = master_layout[1].y + 1 + row as u16;
+                frame.render_widget(ratatui_image::Image::new(protocol), Rect::new(x, y, 2, 1));
+            }
+        }
 
         // MARK: lens list popup
         if self.popup {
@@ -235,7 +295,7 @@ impl App {
                                 .right_aligned(),
                         )
                         .borders(Borders::ALL)
-                        .border_style(Style::default().fg(Color::Rgb(203, 166, 247)))
+                        .border_style(Style::default().fg(Color::from_str(&"#cba6f7").unwrap()))
                         .border_type(BorderType::Rounded),
                 ),
                 popup_area,
@@ -243,7 +303,10 @@ impl App {
         }
     }
 
-    fn keybinds(&mut self, textarea: &mut TextArea) -> std::io::Result<()> {
+    fn keybinds(&mut self, textarea: &mut TextArea) -> std::io::Result<bool> {
+        if !event::poll(Duration::from_millis(16))? {
+            return Ok(false);
+        }
         match event::read()? {
             Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
                 match key_event.code {
@@ -292,7 +355,7 @@ impl App {
             _ => (),
         }
 
-        Ok(())
+        Ok(true)
     }
 }
 
