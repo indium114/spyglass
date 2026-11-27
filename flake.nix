@@ -46,8 +46,13 @@
 
           SKIP_FFI_BUILD = true;
 
-          nativeBuildInputs = [
-            pkgs.makeBinaryWrapper
+          buildInputs = with pkgs; [
+            chafa
+            glib
+          ];
+          nativeBuildInputs = with pkgs; [
+            makeBinaryWrapper
+            pkg-config
           ];
 
           postInstall = ''
