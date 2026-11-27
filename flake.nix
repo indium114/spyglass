@@ -35,6 +35,9 @@
             rust-analyzer
             clippy
             pkg-config
+            chafa
+            glib
+            cliphist
           ];
         };
 
