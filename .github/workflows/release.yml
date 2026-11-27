@@ -24,7 +24,8 @@ jobs:
           sudo dpkg --add-architecture arm64
           sudo apt update
           sudo apt install pkg-config-aarch64-linux-gnu crossbuild-essential-arm64
-          sudo apt install libchafa-dev:amd64 libchafa-dev:arm64
+          sudo apt install libchafa-dev:amd64 libglib2.0-dev:amd64
+          sudo apt install libchafa-dev:arm64 libglib2.0-dev:arm64
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v7
         with:
